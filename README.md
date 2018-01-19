@@ -2,9 +2,11 @@
 
 Very simple sample of setting up an Environment for Unity3d development using Net461, it includes all the DLLs required in the asset folder.
 
-Dlls: Nethereum, dependencies (BouncyCastle..) and System.Runtime.Numerics.
+Dlls: Nethereum, dependencies (BouncyCastle..) and System.Numerics.
 
 The code just demonstrates output to the log the current BlockNumber.
+
+To run a local blockchain you can just use the preconfigured [testchains](https://github.com/Nethereum/Nethereum.Workbooks/tree/master/testchain/)
 
 ```csharp
 ﻿using System;
