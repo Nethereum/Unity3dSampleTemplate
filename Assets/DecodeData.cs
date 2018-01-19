@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Net;
+using System.Net.Security;
+using System.Security.Cryptography.X509Certificates;
 using Nethereum.ABI.FunctionEncoding.Attributes;
 using UnityEngine;
 using Nethereum.Contracts;
@@ -13,7 +16,23 @@ public class DecodeData : MonoBehaviour {
 
     void Start ()
 	{
-	    _web3 = new Web3(); //defaults to http://localhost:8545
+        //code snippet for ssl connections
+	    ServicePointManager.ServerCertificateValidationCallback += delegate (object sender, X509Certificate cert, X509Chain chain, SslPolicyErrors sslPolicyErrors) {
+	        if (sslPolicyErrors == SslPolicyErrors.RemoteCertificateChainErrors)
+	        {
+	            foreach (X509ChainStatus status in chain.ChainStatus)
+	            {
+	                if (status.Status != X509ChainStatusFlags.PartialChain)
+	                {
+	                    return false;
+	                }
+	            }
+	            return true;
+	        }
+	        return false;
+	    };
+
+        _web3 = new Web3("https://mainnet.infura.io"); //defaults to http://localhost:8545
 	}
 
    
