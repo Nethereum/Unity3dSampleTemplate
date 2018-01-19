@@ -6,6 +6,8 @@ Dlls: Nethereum, dependencies (BouncyCastle..) and System.Runtime.Numerics.
 
 The code just demonstrates output to the log the current BlockNumber.
 
+To run a local blockchain you can just use the preconfigured [testchains](https://github.com/Nethereum/Nethereum.Workbooks/tree/master/testchain/)
+
 ```csharp
 ﻿using System;
 using System.Collections;
