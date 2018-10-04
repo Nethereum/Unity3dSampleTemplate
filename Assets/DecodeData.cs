@@ -14,25 +14,19 @@ public class DecodeData : MonoBehaviour {
 
    private Web3 _web3;
 
+    private static bool TrustCertificate(object sender, X509Certificate x509Certificate, X509Chain x509Chain, SslPolicyErrors sslPolicyErrors)
+    {
+        // all certificates are accepted
+        return true;
+    }
+
     void Start ()
 	{
-        //code snippet for ssl connections
-	    ServicePointManager.ServerCertificateValidationCallback += delegate (object sender, X509Certificate cert, X509Chain chain, SslPolicyErrors sslPolicyErrors) {
-	        if (sslPolicyErrors == SslPolicyErrors.RemoteCertificateChainErrors)
-	        {
-	            foreach (X509ChainStatus status in chain.ChainStatus)
-	            {
-	                if (status.Status != X509ChainStatusFlags.PartialChain)
-	                {
-	                    return false;
-	                }
-	            }
-	            return true;
-	        }
-	        return false;
-	    };
+        //This is to workaround issue with certificates https://forum.unity.com/threads/how-to-allow-self-signed-certificate.522183/
 
+        ServicePointManager.ServerCertificateValidationCallback = TrustCertificate;
         _web3 = new Web3("https://mainnet.infura.io"); //defaults to http://localhost:8545
+        //_web3 = new Web3(); //defaults to http://localhost:8545
 	}
 
    
