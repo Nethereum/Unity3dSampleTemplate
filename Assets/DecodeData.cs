@@ -25,7 +25,10 @@ public class DecodeData : MonoBehaviour {
         //This is to workaround issue with certificates https://forum.unity.com/threads/how-to-allow-self-signed-certificate.522183/
 
         ServicePointManager.ServerCertificateValidationCallback = TrustCertificate;
-        _web3 = new Web3("https://mainnet.infura.io"); //defaults to http://localhost:8545
+  // Note: in this sample, a special INFURA API key is used: `7238211010344719ad14a89db874158c`. If you wish to use this sample in your own project you’ll need to [sign up on INFURA](https://infura.io/register) and use your own key.
+        _web3 = new Web3("https://
+goerli.infura.io/v3/7238211010344719ad14a89db874158c
+"); //defaults to http://localhost:8545
         //_web3 = new Web3(); //defaults to http://localhost:8545
 	}
 
