@@ -10,6 +10,10 @@ The code just demonstrates:
 * Ether transfer using Unity.UI and coroutines
 * Smart contract deployment (ERC20), Transactions (Transfer) and Querying (Balance)
 
+**Note:** WebGl only supports coroutines UnityWebRequest. To build WebGl if having issues, uncheck Development Build.
+
+![Desktop](screenshots/desktop.PNG "Desktop")
+![Webgl](screenshots/webgl.png "Webgl")
 
 To run a local blockchain you can just use the preconfigured [testchains](https://github.com/Nethereum/Nethereum.Workbooks/tree/master/testchain/)
 
