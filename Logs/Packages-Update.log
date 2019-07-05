@@ -14,3 +14,12 @@ The following packages were updated:
   com.unity.package-manager-ui from version 1.9.11 to 2.1.2
   com.unity.purchasing from version 2.0.3 to 2.0.6
   com.unity.textmeshpro from version 1.2.4 to 2.0.1
+
+=== Fri Jul  5 10:01:44 2019
+
+Packages were changed.
+Update Mode: resetToDefaultDependencies
+
+The following packages were removed:
+  com.unity.multiplayer-hlapi@1.0.2
+  com.unity.xr.legacyinputhelpers@2.0.2

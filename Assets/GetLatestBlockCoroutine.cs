@@ -19,7 +19,7 @@ public class GetLatestBlockCoroutine : MonoBehaviour
         InputUrl.text = Url;
     }
 
-    public async void GetBlockNumberRequest()
+    public void GetBlockNumberRequest()
     {
         StartCoroutine(GetBlockNumber());
     }
