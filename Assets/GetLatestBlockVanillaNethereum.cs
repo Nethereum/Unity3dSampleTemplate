@@ -6,13 +6,12 @@ using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
 using Nethereum.ABI.FunctionEncoding.Attributes;
 using UnityEngine;
+using UnityEngine.UI;
 using Nethereum.Contracts;
 using Nethereum.Web3;
 
 
-public class DecodeData : MonoBehaviour {
-
-   private Web3 _web3;
+public class GetLatestBlockVanillaNethereum : MonoBehaviour {
 
     private static bool TrustCertificate(object sender, X509Certificate x509Certificate, X509Chain x509Chain, SslPolicyErrors sslPolicyErrors)
     {
@@ -20,19 +19,33 @@ public class DecodeData : MonoBehaviour {
         return true;
     }
 
-    void Start ()
-	{
-        //This is to workaround issue with certificates https://forum.unity.com/threads/how-to-allow-self-signed-certificate.522183/
+    public string Url = "https://mainnet.infura.io";
+   
+    public InputField ResultBlockNumber;
+    public InputField InputUrl;
 
-        ServicePointManager.ServerCertificateValidationCallback = TrustCertificate;
-        _web3 = new Web3("https://mainnet.infura.io"); //defaults to http://localhost:8545
-        //_web3 = new Web3(); //defaults to http://localhost:8545
-	}
+    // Use this for initialization
+    void Start()
+    {
+        InputUrl.text = Url;
+    }
+
+    public async void GetBlockNumber()
+	{
+        Url = InputUrl.text;
+        //This is to workaround issue with certificates https://forum.unity.com/threads/how-to-allow-self-signed-certificate.522183/
+        //Uncomment if needed
+        // ServicePointManager.ServerCertificateValidationCallback = TrustCertificate;
+        var web3 = new Web3(Url);
+        
+        var blockNumber = await web3.Eth.Blocks.GetBlockNumber.SendRequestAsync();
+        ResultBlockNumber.text = blockNumber.Value.ToString();
+    }
 
    
     // Update is called once per frame
     void Update ()
     {
-        Debug.Log(_web3.Eth.Blocks.GetBlockNumber.SendRequestAsync().Result.Value.ToString());
+        
     }
 }

@@ -1,4 +1,10 @@
 Library/
 .git
 .vs
-
+Temp/
+obj/
+UnityPlayground_Data/
+UnityCrashHandler*
+UnityPlayer.dll
+UnityPlayground*
+MonoBleedingEdge/
