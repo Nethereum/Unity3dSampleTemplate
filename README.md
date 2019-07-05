@@ -1,4 +1,4 @@
-# Unity3d Simple Sample (Environment Template)
+# Unity3d Simple Sample Net461
 
 Simple sample for Unity3d development using Net461, it includes all the DLLs required in the asset folder.
 
