@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657826, g: 0.49641263, b: 0.57481676, a: 1}
+  m_IndirectSpecularColor: {r: 0.4465782, g: 0.49641252, b: 0.5748167, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -2989,6 +2989,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1047431046}
+  - component: {fileID: 1047431048}
+  - component: {fileID: 1047431047}
   m_Layer: 5
   m_Name: Form
   m_TagString: Untagged
@@ -3018,6 +3020,30 @@ RectTransform:
   m_AnchoredPosition: {x: -34, y: 14}
   m_SizeDelta: {x: 287.9, y: 351.6}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1047431047
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1047431045}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3156e452cb2bd274d989761778f74dfd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!225 &1047431048
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1047431045}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &1074992144
 GameObject:
   m_ObjectHideFlags: 0
@@ -3289,6 +3315,7 @@ GameObject:
   - component: {fileID: 1158985453}
   - component: {fileID: 1158985455}
   - component: {fileID: 1158985454}
+  - component: {fileID: 1158985456}
   m_Layer: 5
   m_Name: Header
   m_TagString: Untagged
@@ -3346,11 +3373,9 @@ MonoBehaviour:
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 0
-    m_VerticalOverflow: 0
+    m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: 'Get Block Number (Async Nethereum)
-
-'
+  m_Text: Get Block Number (Async Nethereum)
 --- !u!222 &1158985455
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -3359,6 +3384,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1158985452}
   m_CullTransparentMesh: 0
+--- !u!114 &1158985456
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1158985452}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 74572a33d211210459328c0ac1b34213, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1242353980
 GameObject:
   m_ObjectHideFlags: 0
