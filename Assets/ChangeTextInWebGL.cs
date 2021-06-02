@@ -1,5 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Net;
+using System.Security.Cryptography.X509Certificates;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -23,3 +25,4 @@ public class ChangeTextInWebGL : MonoBehaviour
         
     }
 }
+

@@ -282,3 +282,7 @@ C:\Users\juanf\Documents\source\repos\Unity3dSimpleSampleNet461\Temp\bin\Debug\U
 C:\Users\juanf\Documents\source\repos\Unity3dSimpleSampleNet461\Temp\bin\Debug\UnityEngine.LocalizationModule.xml
 C:\Users\juanf\Documents\source\repos\Unity3dSimpleSampleNet461\Temp\bin\Debug\UnityEngine.ProfilerModule.xml
 C:\Users\juanf\Documents\source\repos\Unity3dSimpleSampleNet461\Temp\bin\Debug\UnityEngine.StreamingModule.xml
+G:\JuanFran\Documents\Source\Repos\Unity3dSimpleSampleNet461\obj\Debug\Assembly-CSharp.csprojAssemblyReference.cache
+G:\JuanFran\Documents\Source\Repos\Unity3dSimpleSampleNet461\obj\Debug\Assembly-CSharp.csproj.CoreCompileInputs.cache
+G:\JuanFran\Documents\Source\Repos\Unity3dSimpleSampleNet461\obj\Debug\Assembly-CSharp.dll
+G:\JuanFran\Documents\Source\Repos\Unity3dSimpleSampleNet461\obj\Debug\Assembly-CSharp.pdb

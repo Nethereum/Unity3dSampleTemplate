@@ -5,10 +5,12 @@ using UnityEngine.UI;
 using Nethereum.JsonRpc.UnityClient;
 using Nethereum.RPC.Eth.DTOs;
 using Nethereum.Util;
+using System.Diagnostics;
 
 public class GetLatestBlockCoroutine : MonoBehaviour
 {
     public string Url = "https://mainnet.infura.io";
+    public string UrlFull = "https://mainnet.infura.io/v3/7238211010344719ad14a89db874158c";
 
     public InputField ResultBlockNumber;
     public InputField InputUrl;
@@ -26,13 +28,21 @@ public class GetLatestBlockCoroutine : MonoBehaviour
 
     public IEnumerator GetBlockNumber()
     {
-        Url = InputUrl.text;
 
-        var blockNumberRequest = new EthBlockNumberUnityRequest(Url);
+       var blockNumberRequest = new EthBlockNumberUnityRequest(UrlFull);
+ 
+       yield return blockNumberRequest.SendRequest();
 
-        yield return blockNumberRequest.SendRequest();
+        if (blockNumberRequest.Exception != null)
+        {
+            UnityEngine.Debug.Log(blockNumberRequest.Exception.Message);
+        }
+        else
+        {
+            ResultBlockNumber.text = blockNumberRequest.Result.Value.ToString();
+        }
 
-        ResultBlockNumber.text = blockNumberRequest.Result.Value.ToString();
+        
     }
 
     // Update is called once per frame

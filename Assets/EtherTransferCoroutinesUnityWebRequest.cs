@@ -56,7 +56,7 @@ public class EtherTransferCoroutinesUnityWebRequest : MonoBehaviour {
          
 
         //initialising the transaction request sender
-        var ethTransfer = new EthTransferUnityRequest(Url, PrivateKey);
+        var ethTransfer = new EthTransferUnityRequest(Url, PrivateKey, 444444444500);
 
         var receivingAddress = AddressTo;
         yield return ethTransfer.TransferEther(receivingAddress, Amount, GasPriceGwei);

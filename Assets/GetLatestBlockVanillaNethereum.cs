@@ -20,7 +20,8 @@ public class GetLatestBlockVanillaNethereum : MonoBehaviour {
     }
 
     public string Url = "https://mainnet.infura.io";
-   
+    public string UrlFull = "https://mainnet.infura.io/v3/7238211010344719ad14a89db874158c";
+
     public InputField ResultBlockNumber;
     public InputField InputUrl;
 
@@ -32,11 +33,11 @@ public class GetLatestBlockVanillaNethereum : MonoBehaviour {
 
     public async void GetBlockNumber()
 	{
-        Url = InputUrl.text;
+       // Url = InputUrl.text;
         //This is to workaround issue with certificates https://forum.unity.com/threads/how-to-allow-self-signed-certificate.522183/
         //Uncomment if needed
-        // ServicePointManager.ServerCertificateValidationCallback = TrustCertificate;
-        var web3 = new Web3(Url);
+       // ServicePointManager.ServerCertificateValidationCallback = TrustCertificate;
+        var web3 = new Web3(UrlFull);
         
         var blockNumber = await web3.Eth.Blocks.GetBlockNumber.SendRequestAsync();
         ResultBlockNumber.text = blockNumber.Value.ToString();
