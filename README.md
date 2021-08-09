@@ -1,6 +1,6 @@
-# Unity3d Simple Sample Net461
+# Unity3d Simple Sample Net472
 
-Simple sample for Unity3d development using Net461, it includes all the DLLs required in the asset folder.
+Simple sample for Unity3d development using Net472, it includes all the DLLs required in the asset folder.
 
 Dlls: Nethereum, dependencies (BouncyCastle..) and System.Numerics.
 
