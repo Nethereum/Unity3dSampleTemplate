@@ -162,8 +162,8 @@ We can convert the result in Wei to Eth using the default Wei UnitConvertor.
 ```csharp
 Debug.Log("Balance of account:" + UnitConversion.Convert.FromWei(balanceRequest.Result.Value));
 ```
-## EIP 1559 Fee suggestion using strategis and Legacy Mode 
-Here are some examples of using these fee suggestion strategies uing coroutines, TimePreference, MedianFeeHistory or LegacyMode to use the old mode or to use with other chains.
+## EIP 1559 Fee suggestion using the strategies provided and Legacy Mode 
+Here are some examples of using the provided fee suggestion strategies using coroutines, TimePreference, MedianFeeHistory or LegacyMode to use the old mode or to use with other chains.
 
 To use LegacyMode you have to provide the GasPrice or it can be force the LegacyMode by setting ```UseLegacyAsDefault``` to true.
 
@@ -245,6 +245,7 @@ To use LegacyMode you have to provide the GasPrice or it can be force the Legacy
 
 ### Full sample
 ```csharp
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Numerics;
@@ -254,9 +255,14 @@ using Nethereum.ABI.Model;
 using Nethereum.Contracts;
 using Nethereum.Contracts.CQS;
 using Nethereum.Contracts.Extensions;
+using Nethereum.Hex.HexConvertors.Extensions;
+using Nethereum.Hex.HexTypes;
 using Nethereum.JsonRpc.UnityClient;
 using Nethereum.RPC.Eth.DTOs;
+using Nethereum.RPC.TransactionManagers;
+using Nethereum.Signer;
 using Nethereum.Util;
+using Nethereum.Web3.Accounts;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -293,6 +299,13 @@ public class EtherTransferCoroutinesUnityWebRequest : MonoBehaviour {
         StartCoroutine(TransferEther());
     }
 
+    public enum FeeStrategy
+    {
+        Legacy,
+        TimePreference,
+        MedianFeeHistory
+    }
+
     //Sample of new features / requests
     public IEnumerator TransferEther()
     {
@@ -300,18 +313,85 @@ public class EtherTransferCoroutinesUnityWebRequest : MonoBehaviour {
         PrivateKey = InputPrivateKey.text;
         AddressTo = InputAddressTo.text;
         Amount = System.Decimal.Parse(InputAmount.text);
-         
 
         //initialising the transaction request sender
-        var ethTransfer = new EthTransferUnityRequest(Url, PrivateKey);
+        var ethTransfer = new EthTransferUnityRequest(Url, PrivateKey, 444444444500);
 
         var receivingAddress = AddressTo;
-        yield return ethTransfer.TransferEther(receivingAddress, Amount, GasPriceGwei);
 
-        if (ethTransfer.Exception != null)
+        var feeStrategy = FeeStrategy.Legacy;
+
+        if (feeStrategy == FeeStrategy.TimePreference)
         {
-            Debug.Log(ethTransfer.Exception.Message);
-            yield break;
+            Debug.Log("Time Preference");
+            var timePreferenceFeeSuggestion = new TimePreferenceFeeSuggestionUnityRequestStrategy(Url);
+
+            yield return timePreferenceFeeSuggestion.SuggestFees();
+
+            if (timePreferenceFeeSuggestion.Exception != null)
+            {
+                Debug.Log(timePreferenceFeeSuggestion.Exception.Message);
+                yield break;
+            }
+
+            //lets get the first one so it is higher priority
+            Debug.Log(timePreferenceFeeSuggestion.Result.Length);
+            if (timePreferenceFeeSuggestion.Result.Length > 0)
+            {
+                Debug.Log(timePreferenceFeeSuggestion.Result[0].MaxFeePerGas);
+                Debug.Log(timePreferenceFeeSuggestion.Result[0].MaxPriorityFeePerGas);
+            }
+            var fee = timePreferenceFeeSuggestion.Result[0];
+
+            yield return ethTransfer.TransferEther(receivingAddress, Amount, fee.MaxPriorityFeePerGas.Value, fee.MaxFeePerGas.Value);
+            if (ethTransfer.Exception != null)
+            {
+                Debug.Log(ethTransfer.Exception.Message);
+                yield break;
+            }
+        }
+
+
+        if(feeStrategy == FeeStrategy.MedianFeeHistory)
+        {
+            Debug.Log("MedianFeeHistory mode");
+            var medianPriorityFeeStrategy = new MedianPriorityFeeHistorySuggestionUnityRequestStrategy(Url);
+
+            yield return medianPriorityFeeStrategy.SuggestFee();
+
+            if (medianPriorityFeeStrategy.Exception != null)
+            {
+                Debug.Log(medianPriorityFeeStrategy.Exception.Message);
+                yield break;
+            }
+            
+            Debug.Log(medianPriorityFeeStrategy.Result.MaxFeePerGas);
+            Debug.Log(medianPriorityFeeStrategy.Result.MaxPriorityFeePerGas);
+            
+            var fee = medianPriorityFeeStrategy.Result;
+
+            yield return ethTransfer.TransferEther(receivingAddress, Amount, fee.MaxPriorityFeePerGas.Value, fee.MaxFeePerGas.Value);
+            if (ethTransfer.Exception != null)
+            {
+                Debug.Log(ethTransfer.Exception.Message);
+                yield break;
+            }
+        }
+
+        if (feeStrategy == FeeStrategy.Legacy)
+        {
+            Debug.Log("Legacy mode");
+            //I am forcing the legacy mode but also I am including the gas price
+            ethTransfer.UseLegacyAsDefault = true;
+
+            yield return ethTransfer.TransferEther(receivingAddress, Amount, GasPriceGwei);
+
+            if (ethTransfer.Exception != null)
+            {
+                Debug.Log(ethTransfer.Exception.Message);
+                yield break;
+            }
+
         }
 
         TransactionHash = ethTransfer.Result;
@@ -340,6 +420,7 @@ public class EtherTransferCoroutinesUnityWebRequest : MonoBehaviour {
     void Update () {
 		
 	}
+
 }
 ```
 
