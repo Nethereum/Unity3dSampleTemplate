@@ -91,7 +91,7 @@ public class TokenDeployAndSendCoroutinesUnityWebRequest : MonoBehaviour {
     // Use this for initialization
     void Start () {
 
-       StartCoroutine(DeployAndTransferToken());
+      // StartCoroutine(DeployAndTransferToken());
     }
 
 
