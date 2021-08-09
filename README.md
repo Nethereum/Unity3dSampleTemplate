@@ -6,14 +6,15 @@ Dlls: Nethereum, dependencies (BouncyCastle..) and System.Numerics.
 
 The code just demonstrates:
 
-* Output to the log the current BlockNumber using Unity.UI both in Async and coroutines.
+* Output to the log the current BlockNumber using Unity.UI both in Async and coroutines
 * Ether transfer using Unity.UI and coroutines
+* Using 1559 Suggestion strategies or Legacy mode when tranfering Ether
 * Smart contract deployment (ERC20), Transactions (Transfer) and Querying (Balance)
 
 **Note:** 
 * WebGl only supports coroutines UnityWebRequest. To build WebGl if having issues, uncheck Development Build.
 * To support WebGl and AOT this sample uses the Net461AOT dll with the custom Json.Net Unity 
-* Please remember to remove System.HttpCliend and UnityEngine of the Nethereum release package if included
+* Please remember to remove System.HttpClient and UnityEngine of the Nethereum release package if included
 
 
 ![Desktop](screenshots/desktop.PNG "Desktop")
@@ -120,7 +121,7 @@ var privateKey = "0xb5b1870957d373ef0eeffecc6e4812c0fd08f554b37b233526acc331bf15
 var ethTransfer = new EthTransferUnityRequest(url, privateKey);
 ```
 
-Once our unity request is instantiated it we can initiate the transfer as follows:
+Once our unity request is instantiated it we can initiate the transfer as follows using Legacy Mode providing 2 Gwei as the gas price
 
 ```csharp
 var receivingAddress = "0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe";
@@ -159,6 +160,86 @@ We can convert the result in Wei to Eth using the default Wei UnitConvertor.
 
 ```csharp
 Debug.Log("Balance of account:" + UnitConversion.Convert.FromWei(balanceRequest.Result.Value));
+```
+## EIP 1559 Fee suggestion using strategis and Legacy Mode 
+Here are some examples of using these fee suggestion strategies uing coroutines, TimePreference, MedianFeeHistory or LegacyMode to use the old mode or to use with other chains.
+
+To use LegacyMode you have to provide the GasPrice or it can be force the LegacyMode by setting ```UseLegacyAsDefault``` to true.
+
+```csharp
+       if (feeStrategy == FeeStrategy.TimePreference)
+        {
+            Debug.Log("Time Preference");
+            var timePreferenceFeeSuggestion = new TimePreferenceFeeSuggestionUnityRequestStrategy(Url);
+
+            yield return timePreferenceFeeSuggestion.SuggestFees();
+
+            if (timePreferenceFeeSuggestion.Exception != null)
+            {
+                Debug.Log(timePreferenceFeeSuggestion.Exception.Message);
+                yield break;
+            }
+
+            //lets get the first one so it is higher priority
+            Debug.Log(timePreferenceFeeSuggestion.Result.Length);
+            if (timePreferenceFeeSuggestion.Result.Length > 0)
+            {
+                Debug.Log(timePreferenceFeeSuggestion.Result[0].MaxFeePerGas);
+                Debug.Log(timePreferenceFeeSuggestion.Result[0].MaxPriorityFeePerGas);
+            }
+            var fee = timePreferenceFeeSuggestion.Result[0];
+
+            yield return ethTransfer.TransferEther(receivingAddress, Amount, fee.MaxPriorityFeePerGas.Value, fee.MaxFeePerGas.Value);
+            if (ethTransfer.Exception != null)
+            {
+                Debug.Log(ethTransfer.Exception.Message);
+                yield break;
+            }
+        }
+
+
+        if(feeStrategy == FeeStrategy.MedianFeeHistory)
+        {
+            Debug.Log("MedianFeeHistory mode");
+            var medianPriorityFeeStrategy = new MedianPriorityFeeHistorySuggestionUnityRequestStrategy(Url);
+
+            yield return medianPriorityFeeStrategy.SuggestFee();
+
+            if (medianPriorityFeeStrategy.Exception != null)
+            {
+                Debug.Log(medianPriorityFeeStrategy.Exception.Message);
+                yield break;
+            }
+            
+            Debug.Log(medianPriorityFeeStrategy.Result.MaxFeePerGas);
+            Debug.Log(medianPriorityFeeStrategy.Result.MaxPriorityFeePerGas);
+            
+            var fee = medianPriorityFeeStrategy.Result;
+
+            yield return ethTransfer.TransferEther(receivingAddress, Amount, fee.MaxPriorityFeePerGas.Value, fee.MaxFeePerGas.Value);
+            if (ethTransfer.Exception != null)
+            {
+                Debug.Log(ethTransfer.Exception.Message);
+                yield break;
+            }
+        }
+
+        if (feeStrategy == FeeStrategy.Legacy)
+        {
+            Debug.Log("Legacy mode");
+            //I am forcing the legacy mode but also I am including the gas price
+            ethTransfer.UseLegacyAsDefault = true;
+
+            yield return ethTransfer.TransferEther(receivingAddress, Amount, GasPriceGwei);
+
+            if (ethTransfer.Exception != null)
+            {
+                Debug.Log(ethTransfer.Exception.Message);
+                yield break;
+            }
+
+        }
+
 ```
 
 ### Full sample
