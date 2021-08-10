@@ -1,6 +1,9 @@
 # Unity3d Simple Sample Net472
 
-Simple sample for Unity3d development using Net472 (upgraded now from Net461), it includes all the DLLs required in the asset folder.
+Simple sample for Unity3d development using Net472 (upgraded now from Net461), it includes all the DLLs in the asset folder.
+
+Note: You may not need some of them so you can remove them (like Besu, Geth, HdWallet, NBitcoin, etc), depending on your needs.
+
 The Unity Version used is 2020.3.15f LTS
 
 Dlls: Nethereum, dependencies (BouncyCastle..) and System.Numerics.
