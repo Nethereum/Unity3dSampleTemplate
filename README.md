@@ -14,7 +14,7 @@ The code just demonstrates:
 
 **Note:** 
 * WebGl only supports coroutines UnityWebRequest. To build WebGl if having issues, uncheck Development Build.
-* To support WebGl and AOT this sample uses the Net461AOT dll with the custom Json.Net Unity 
+* To support WebGl and AOT this sample uses the Net472AOT dlls with the custom Json.Net Unity 
 * Please remember to remove System.HttpClient and UnityEngine of the Nethereum release package if included
 
 
@@ -119,7 +119,7 @@ The EthTransferUnityRequest it is instantiated with the "url" of our Ethereum cl
 ```csharp
 var url = "http://localhost:8545";
 var privateKey = "0xb5b1870957d373ef0eeffecc6e4812c0fd08f554b37b233526acc331bf1544f7"; 
-var ethTransfer = new EthTransferUnityRequest(url, privateKey);
+var ethTransfer = new EthTransferUnityRequest(url, privateKey, "YOURCHAINID");
 ```
 
 Once our unity request is instantiated it we can initiate the transfer as follows using Legacy Mode providing 2 Gwei as the gas price
@@ -531,7 +531,7 @@ Finally we we create TransactionReceiptPollingRequest to poll for the transactio
         var account = "0x12890d2cce102216644c59daE5baed380d84830c";
         //initialising the transaction request sender
         
-        var transactionRequest = new TransactionSignedUnityRequest(url, privateKey);
+        var transactionRequest = new TransactionSignedUnityRequest(url, privateKey, "YOURCHAINID");
 
         var deployContract = new EIP20Deployment()
         {
@@ -585,7 +585,7 @@ We first create a TransactionSignedUnityRequest and our Function including any p
 Using the transaction receipt we can decoded any logs / events for that transaction.
 
 ```csharp
- var transactionTransferRequest = new TransactionSignedUnityRequest(url, privateKey);
+ var transactionTransferRequest = new TransactionSignedUnityRequest(url, privateKey, "YOURCHAINID");
         var newAddress = "0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe";
 
 
