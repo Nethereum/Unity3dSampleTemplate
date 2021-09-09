@@ -3,8 +3,10 @@ Library/
 .vs
 Temp/
 obj/
+Logs/
 UnityPlayground_Data/
 UnityCrashHandler*
 UnityPlayer.dll
 UnityPlayground*
 MonoBleedingEdge/
+*.log

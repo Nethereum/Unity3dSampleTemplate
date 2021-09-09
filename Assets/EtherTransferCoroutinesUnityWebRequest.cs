@@ -72,7 +72,7 @@ public class EtherTransferCoroutinesUnityWebRequest : MonoBehaviour {
 
         var receivingAddress = AddressTo;
 
-        var feeStrategy = FeeStrategy.Legacy;
+        var feeStrategy = FeeStrategy.MedianFeeHistory;
 
         if (feeStrategy == FeeStrategy.TimePreference)
         {
@@ -99,7 +99,7 @@ public class EtherTransferCoroutinesUnityWebRequest : MonoBehaviour {
             yield return ethTransfer.TransferEther(receivingAddress, Amount, fee.MaxPriorityFeePerGas.Value, fee.MaxFeePerGas.Value);
             if (ethTransfer.Exception != null)
             {
-                Debug.Log(ethTransfer.Exception.Message);
+                Debug.Log("Error transferring Ether using Time Preference Fee Estimation Strategy: " + ethTransfer.Exception.Message);
                 yield break;
             }
         }
@@ -126,7 +126,7 @@ public class EtherTransferCoroutinesUnityWebRequest : MonoBehaviour {
             yield return ethTransfer.TransferEther(receivingAddress, Amount, fee.MaxPriorityFeePerGas.Value, fee.MaxFeePerGas.Value);
             if (ethTransfer.Exception != null)
             {
-                Debug.Log(ethTransfer.Exception.Message);
+                Debug.Log("Error transferring Ether using Median Fee History Fee Estimation Strategy: " + ethTransfer.Exception.Message);
                 yield break;
             }
         }
@@ -141,7 +141,7 @@ public class EtherTransferCoroutinesUnityWebRequest : MonoBehaviour {
 
             if (ethTransfer.Exception != null)
             {
-                Debug.Log(ethTransfer.Exception.Message);
+                Debug.Log("Error transferring Ether using Legacy Gas Price:  " + ethTransfer.Exception.Message);
                 yield break;
             }
 

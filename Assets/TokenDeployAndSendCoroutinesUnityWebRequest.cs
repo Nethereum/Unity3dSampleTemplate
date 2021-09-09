@@ -91,7 +91,8 @@ public class TokenDeployAndSendCoroutinesUnityWebRequest : MonoBehaviour {
     // Use this for initialization
     void Start () {
 
-      // StartCoroutine(DeployAndTransferToken());
+        Debug.Log("Starting TokenDeployAndSendCoroutinesUnityWebRequest example");
+        StartCoroutine(DeployAndTransferToken());
     }
 
 
@@ -103,6 +104,7 @@ public class TokenDeployAndSendCoroutinesUnityWebRequest : MonoBehaviour {
         var account = "0x12890d2cce102216644c59daE5baed380d84830c";
         //initialising the transaction request sender
         var transactionRequest = new TransactionSignedUnityRequest(url, privateKey, 444444444500);
+        transactionRequest.UseLegacyAsDefault = true;
 
 
         var deployContract = new EIP20Deployment()
@@ -143,7 +145,8 @@ public class TokenDeployAndSendCoroutinesUnityWebRequest : MonoBehaviour {
         Debug.Log(dtoResult.Balance);
 
 
-        var transactionTransferRequest = new TransactionSignedUnityRequest(url, privateKey);
+        var transactionTransferRequest = new TransactionSignedUnityRequest(url, privateKey, 444444444500);
+        transactionTransferRequest.UseLegacyAsDefault = true;
 
         var newAddress = "0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe";
 
