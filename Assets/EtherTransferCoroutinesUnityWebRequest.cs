@@ -10,14 +10,15 @@ using Nethereum.Contracts.CQS;
 using Nethereum.Contracts.Extensions;
 using Nethereum.Hex.HexConvertors.Extensions;
 using Nethereum.Hex.HexTypes;
-using Nethereum.JsonRpc.UnityClient;
+using Nethereum.Unity.Rpc;
+using Nethereum.Unity.FeeSuggestions;
 using Nethereum.RPC.Eth.DTOs;
 using Nethereum.RPC.TransactionManagers;
 using Nethereum.Signer;
 using Nethereum.Util;
-using Nethereum.Web3.Accounts;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEditor;
 
 public class EtherTransferCoroutinesUnityWebRequest : MonoBehaviour {
 
@@ -37,6 +38,10 @@ public class EtherTransferCoroutinesUnityWebRequest : MonoBehaviour {
     public InputField ResultBalanceAddressTo;
     public InputField ResultTxnHash;
 
+    public EtherTransferCoroutinesUnityWebRequest()
+    {
+        
+    }
     // Use this for initialization
     void Start () {
 

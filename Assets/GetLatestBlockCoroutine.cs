@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using Nethereum.JsonRpc.UnityClient;
-using Nethereum.RPC.Eth.DTOs;
-using Nethereum.Util;
-using System.Diagnostics;
+using Nethereum.Unity.Rpc;
+using Nethereum.BlockchainProcessing.BlockStorage.Entities;
+using System;
+
 
 public class GetLatestBlockCoroutine : MonoBehaviour
 {
-    public string Url = "https://mainnet.infura.io";
+    public string Url = "http://localhost:8545";
     public string UrlFull = "https://mainnet.infura.io/v3/7238211010344719ad14a89db874158c";
 
     public InputField ResultBlockNumber;
@@ -29,7 +29,7 @@ public class GetLatestBlockCoroutine : MonoBehaviour
     public IEnumerator GetBlockNumber()
     {
 
-       var blockNumberRequest = new EthBlockNumberUnityRequest(UrlFull);
+       var blockNumberRequest = new EthBlockNumberUnityRequest(InputUrl.text);
  
        yield return blockNumberRequest.SendRequest();
 
