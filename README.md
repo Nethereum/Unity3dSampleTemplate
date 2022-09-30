@@ -1,28 +1,33 @@
-# Unity3d Simple Sample Net472
+# Unity3d Sample Template Net472 / Netstandard
 
-Simple sample for Unity3d development using Net472 (upgraded now from Net461), it includes all the DLLs in the asset folder.
+Simple sample for Unity3d development using  Net472AOT Common release, (Netstandard works the same) included in the asset folder.
 
-Note: You may not need some of them so you can remove them (like Besu, Geth, HdWallet, NBitcoin, etc), depending on your needs.
+Note: You may not need some of them so you can remove them, depending on your needs.
 
-The Unity Version used is 2020.3.15f LTS
+The Unity Version used is 2021.3.6f1 LTS
 
-Dlls: Nethereum, dependencies (BouncyCastle..) and System.Numerics.
+Dlls: Nethereum, dependencies (BouncyCastle, Microsoft.Extensions.Logging.Abstractions, NBitcoin.dll for hdwallet)
 
-The code just demonstrates:
+The code demonstrates:
 
 * Output to the log the current BlockNumber using Unity.UI both in Async and coroutines
 * Ether transfer using Unity.UI and coroutines
 * Using 1559 Suggestion strategies or Legacy mode when tranfering Ether
 * Smart contract deployment (ERC20), Transactions (Transfer) and Querying (Balance)
+* Cross Platform architecture (Coroutines) reuse your code using different deployments Native /Desktop or Browser using Metamask)
+* Metamask connectivity in browser
 
 **Note:** 
 * WebGl only supports coroutines UnityWebRequest. To build WebGl if having issues, uncheck Development Build.
-* To support WebGl and AOT this sample uses the Net472AOT dlls with the custom Json.Net Unity 
+* To support WebGl and AOT this sample uses the Net472AOT or NetstandardAOT dlls with the custom Json.Net Unity by Unity
 * Please remember to remove System.HttpClient and UnityEngine of the Nethereum release package if included
 
+### Desktop demo
 
-![Desktop](screenshots/desktop.PNG "Desktop")
-![Webgl](screenshots/webgl.png "Webgl")
+![Desktop](screenshots/desktopDemo.gif "Desktop")
+
+### Browser demo
+![Webgl](screenshots/BrowserWebglDemo.gif "Webgl")
 
 To run a local blockchain you can just use the preconfigured [testchains](https://github.com/Nethereum/Nethereum.Workbooks/tree/master/testchain/)
 
