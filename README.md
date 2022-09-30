@@ -1,10 +1,10 @@
 # Unity3d Sample Template Net472 / Netstandard
 
-Simple sample for Unity3d development using  Net472AOT Common release, (Netstandard works the same) included in the asset folder.
+Sample template to get started Unity3d development using Nethereum. It includes the necessary dlls from the Net472AOT Common release, (Netstandard works the same) in the asset folder.
 
 Note: You may not need some of them so you can remove them, depending on your needs.
 
-The Unity Version used is 2021.3.6f1 LTS
+Unity Version used is 2021.3.6f1 LTS
 
 Dlls: Nethereum, dependencies (BouncyCastle, Microsoft.Extensions.Logging.Abstractions, NBitcoin.dll for hdwallet)
 
