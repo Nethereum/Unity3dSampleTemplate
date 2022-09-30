@@ -816,9 +816,9 @@ public class TokenDeployAndSendCoroutinesUnityWebRequest : MonoBehaviour {
 ```
 ## Targetting multiple platforms Desktop / Native / Browser
 	
-Using the ```IUnityRpcRequestClientFactory``` and the ```IContractTransactionUnityRequest``` you can change the way your transactions are signed wiuthout having to change all your code.
+Using the ```IUnityRpcRequestClientFactory``` and the ```IContractTransactionUnityRequest``` you can change the way your transactions are signed reusing all your code.
 	
-In this example we are eithew signing or querying the chain using our provided url / private key / chainId when we are in a desktop / mobile / console environment or if we are in a browser we use Metamask to sign our transactions.
+In this example we are either signing or querying the chain using our provided url / private key / chainId when we are in a desktop / mobile / console environment or if we are in a browser we use Metamask to sign our transactions.
 	
 ```csharp
 
