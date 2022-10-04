@@ -384,6 +384,9 @@
     <Reference Include="Nethereum.Web3">
       <HintPath>Assets\Plugins\Nethereum.Web3.dll</HintPath>
     </Reference>
+    <Reference Include="Nethereum.Siwe">
+      <HintPath>Assets\Plugins\Nethereum.Siwe.dll</HintPath>
+    </Reference>
     <Reference Include="mscorlib">
       <HintPath>C:\Program Files\Unity\Hub\Editor\2021.3.6f1\Editor\Data\UnityReferenceAssemblies\unity-4.8-api\mscorlib.dll</HintPath>
     </Reference>

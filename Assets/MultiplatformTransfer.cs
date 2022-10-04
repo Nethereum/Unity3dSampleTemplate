@@ -5,7 +5,9 @@ using Nethereum.Unity.Rpc;
 using Nethereum.RPC.Eth.DTOs;
 using Nethereum.Util;
 using Debug = UnityEngine.Debug;
-using Nethereum.Unity.Metamask;
+#if UNITY_WEBGL
+  using Nethereum.Unity.Metamask;
+#endif
 using Nethereum.Unity.FeeSuggestions;
 using Nethereum.Unity.Contracts;
 using System.Numerics;
@@ -136,6 +138,7 @@ public class MultiplatformTransfer : MonoBehaviour
 
     public void MetamaskConnect()
     {
+#if UNITY_WEBGL
         if (IsWebGL())
         {
             if (MetamaskInterop.IsMetamaskAvailable())
@@ -147,11 +150,13 @@ public class MultiplatformTransfer : MonoBehaviour
                 DisplayError("Metamask is not available, please install it");
             }
         }
+#endif
 
     }
 
     public void EthereumEnabled(string addressSelected)
     {
+#if UNITY_WEBGL
         if (IsWebGL())
         {
             if (!_isMetamaskInitialised)
@@ -162,6 +167,7 @@ public class MultiplatformTransfer : MonoBehaviour
             }
             NewAccountSelected(addressSelected);
         }
+#endif
     }
 
     public void ChainChanged(string chainId)
@@ -179,6 +185,7 @@ public class MultiplatformTransfer : MonoBehaviour
 
     public IUnityRpcRequestClientFactory GetUnityRpcRequestClientFactory()
     {
+#if UNITY_WEBGL
         if (IsWebGL())
         {
             if (MetamaskInterop.IsMetamaskAvailable())
@@ -193,14 +200,18 @@ public class MultiplatformTransfer : MonoBehaviour
         }
         else
         {
+#endif
             Url = InputUrl.text;
-            
             return new UnityWebRequestRpcClientFactory(Url);
+#if UNITY_WEBGL
         }
+#endif
     }
 
     public IContractTransactionUnityRequest GetTransactionUnityRequest()
     {
+#if UNITY_WEBGL
+
         if (IsWebGL())
         {
             if (MetamaskInterop.IsMetamaskAvailable())
@@ -215,11 +226,14 @@ public class MultiplatformTransfer : MonoBehaviour
         }
         else
         {
+#endif
             Url = InputUrl.text;
             PrivateKey = InputPrivateKey.text;
             ChainId = BigInteger.Parse(InputChainId.text);
             return new TransactionSignedUnityRequest(Url, PrivateKey, ChainId);
+#if UNITY_WEBGL
         }
+#endif
     }
 
 }
