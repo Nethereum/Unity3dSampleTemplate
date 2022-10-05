@@ -1113,6 +1113,8 @@ public class MultiplatformTransfer : MonoBehaviour
 	
 ```
 
+##Credits
 
+The example includes Unity TabsUI component described here https://www.youtube.com/watch?v=p9kRAdh_3Ks, source code https://github.com/herbou/Unity_TabsUI
 
 
