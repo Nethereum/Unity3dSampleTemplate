@@ -1,12 +1,10 @@
 # Unity3d Sample Template Net472 / Netstandard
 
-Sample template to get started Unity3d development using Nethereum. It includes the necessary dlls from the Net472AOT Common release, (Netstandard works the same) in the asset folder.
-
-Note: You may not need some of them so you can remove them, depending on your needs.
+Sample template to get started Unity3d development using Nethereum. It includes the necessary dlls from the Net472AOT Common release (commmon libraries for general tasks, not specialised ones like geth, reactive, etc) in the asset folder. Netstandard libraries work the same. You may not need some of the libraries so you can remove them, depending on your needs.
 
 Unity Version used is 2021.3.6f1 LTS
 
-Dlls: Nethereum, dependencies (BouncyCastle, Microsoft.Extensions.Logging.Abstractions, NBitcoin.dll for hdwallet)
+Dlls: Nethereum, dependencies (BouncyCastle, Microsoft.Extensions.Logging.Abstractions, NBitcoin.dll for HD Wallet)
 
 The code demonstrates:
 
@@ -21,6 +19,9 @@ The code demonstrates:
 * WebGl only supports coroutines UnityWebRequest. To build WebGl if having issues, uncheck Development Build.
 * To support WebGl and AOT this sample uses the Net472AOT or NetstandardAOT dlls with the custom Json.Net Unity by Unity
 * Please remember to remove System.HttpClient and UnityEngine of the Nethereum release package if included
+*  Nethereum.Unity.Metamask is only supported in Webgl, ignore it for other platforms (not the editor)
+![image](https://user-images.githubusercontent.com/562371/194084421-2c3dff68-f61b-479e-b877-2d62ccb42859.png)
+* If creating a custom index.html file, or rebuilding webgl in a new folder, the script needs to instantiate ```nethereumUnityInstance``` as per the example here: https://github.com/Nethereum/Unity3dSampleTemplate/blob/master/webgl/index.html#L112
 
 ### Desktop demo
 
