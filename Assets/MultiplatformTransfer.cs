@@ -108,8 +108,10 @@ public class MultiplatformTransfer : MonoBehaviour
         if (ethTransfer.Exception != null)
         {
             Debug.Log("Error transferring Ether using Time Preference Fee Estimation Strategy: " + ethTransfer.Exception.Message);
+            DisplayError(ethTransfer.Exception.Message);
             yield break;
         }
+       
 
         TransactionHash = ethTransfer.Result;
         ResultTxnHash.text = TransactionHash;
@@ -190,7 +192,7 @@ public class MultiplatformTransfer : MonoBehaviour
         {
             if (MetamaskInterop.IsMetamaskAvailable())
             {
-                return new MetamaskRequestRpcClientFactory(_selectedAccountAddress, null, 1000);
+                return new MetamaskRequestRpcClientFactory(_selectedAccountAddress, null, 60000);
             }
             else
             {
