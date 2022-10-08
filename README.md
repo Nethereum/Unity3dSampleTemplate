@@ -1,12 +1,10 @@
 # Unity3d Sample Template Net472 / Netstandard
 
-Sample template to get started Unity3d development using Nethereum. It includes the necessary dlls from the Net472AOT Common release, (Netstandard works the same) in the asset folder.
-
-Note: You may not need some of them so you can remove them, depending on your needs.
+Sample template to get started Unity3d development using Nethereum. It includes the necessary dlls from the Net472AOT Common release (commmon libraries for general tasks, not specialised ones like geth, reactive, etc) in the asset folder. Netstandard libraries work the same. You may not need some of the libraries so you can remove them, depending on your needs.
 
 Unity Version used is 2021.3.6f1 LTS
 
-Dlls: Nethereum, dependencies (BouncyCastle, Microsoft.Extensions.Logging.Abstractions, NBitcoin.dll for hdwallet)
+Dlls: Nethereum, dependencies (BouncyCastle, Microsoft.Extensions.Logging.Abstractions, NBitcoin.dll for HD Wallet)
 
 The code demonstrates:
 
@@ -21,6 +19,9 @@ The code demonstrates:
 * WebGl only supports coroutines UnityWebRequest. To build WebGl if having issues, uncheck Development Build.
 * To support WebGl and AOT this sample uses the Net472AOT or NetstandardAOT dlls with the custom Json.Net Unity by Unity
 * Please remember to remove System.HttpClient and UnityEngine of the Nethereum release package if included
+*  Nethereum.Unity.Metamask is only supported in Webgl, ignore it for other platforms (not the editor)
+![image](https://user-images.githubusercontent.com/562371/194084421-2c3dff68-f61b-479e-b877-2d62ccb42859.png)
+* If creating a custom index.html file, or rebuilding webgl in a new folder, the script needs to instantiate ```nethereumUnityInstance``` as per the example here: https://github.com/Nethereum/Unity3dSampleTemplate/blob/master/webgl/index.html#L112
 
 ### Desktop demo
 
@@ -877,7 +878,9 @@ using Nethereum.Unity.Rpc;
 using Nethereum.RPC.Eth.DTOs;
 using Nethereum.Util;
 using Debug = UnityEngine.Debug;
-using Nethereum.Unity.Metamask;
+#if UNITY_WEBGL
+  using Nethereum.Unity.Metamask;
+#endif
 using Nethereum.Unity.FeeSuggestions;
 using Nethereum.Unity.Contracts;
 using System.Numerics;
@@ -922,7 +925,6 @@ public class MultiplatformTransfer : MonoBehaviour
             InputPrivateKey.text = PrivateKey;
             InputChainId.text = ChainId.ToString();
             BtnMetamaskConnect.enabled = false;
-            
         }
 
         InputAddressTo.text = AddressTo;
@@ -1009,6 +1011,7 @@ public class MultiplatformTransfer : MonoBehaviour
 
     public void MetamaskConnect()
     {
+#if UNITY_WEBGL
         if (IsWebGL())
         {
             if (MetamaskInterop.IsMetamaskAvailable())
@@ -1020,11 +1023,13 @@ public class MultiplatformTransfer : MonoBehaviour
                 DisplayError("Metamask is not available, please install it");
             }
         }
+#endif
 
     }
 
     public void EthereumEnabled(string addressSelected)
     {
+#if UNITY_WEBGL
         if (IsWebGL())
         {
             if (!_isMetamaskInitialised)
@@ -1035,6 +1040,7 @@ public class MultiplatformTransfer : MonoBehaviour
             }
             NewAccountSelected(addressSelected);
         }
+#endif
     }
 
     public void ChainChanged(string chainId)
@@ -1052,6 +1058,7 @@ public class MultiplatformTransfer : MonoBehaviour
 
     public IUnityRpcRequestClientFactory GetUnityRpcRequestClientFactory()
     {
+#if UNITY_WEBGL
         if (IsWebGL())
         {
             if (MetamaskInterop.IsMetamaskAvailable())
@@ -1066,14 +1073,18 @@ public class MultiplatformTransfer : MonoBehaviour
         }
         else
         {
+#endif
             Url = InputUrl.text;
-            
             return new UnityWebRequestRpcClientFactory(Url);
+#if UNITY_WEBGL
         }
+#endif
     }
 
     public IContractTransactionUnityRequest GetTransactionUnityRequest()
     {
+#if UNITY_WEBGL
+
         if (IsWebGL())
         {
             if (MetamaskInterop.IsMetamaskAvailable())
@@ -1088,17 +1099,22 @@ public class MultiplatformTransfer : MonoBehaviour
         }
         else
         {
+#endif
             Url = InputUrl.text;
             PrivateKey = InputPrivateKey.text;
             ChainId = BigInteger.Parse(InputChainId.text);
             return new TransactionSignedUnityRequest(Url, PrivateKey, ChainId);
+#if UNITY_WEBGL
         }
+#endif
     }
 
 }
 	
 ```
 
+## Credits
 
+The example includes Unity TabsUI component https://www.youtube.com/watch?v=p9kRAdh_3Ks, source code https://github.com/herbou/Unity_TabsUI by Herbou
 
 
