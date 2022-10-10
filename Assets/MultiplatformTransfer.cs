@@ -12,6 +12,7 @@ using Nethereum.Unity.FeeSuggestions;
 using Nethereum.Unity.Contracts;
 using System.Numerics;
 using Nethereum.Hex.HexTypes;
+using Nethereum.Signer;
 
 public class MultiplatformTransfer : MonoBehaviour
 {
@@ -36,6 +37,9 @@ public class MultiplatformTransfer : MonoBehaviour
     public Button BtnMetamaskConnect;
     public Text  LblError;
 
+
+    public InputField InputSignMessage;
+    public Text LblSignedMessage;
 
     void Start()
     {
@@ -182,6 +186,33 @@ public class MultiplatformTransfer : MonoBehaviour
     public void NewAccountSelected(string accountAddress)
     {
         _selectedAccountAddress = accountAddress;
+    }
+
+    public void SignMessageRequest()
+    {
+        StartCoroutine(SignMessage());
+    }
+
+    public IEnumerator SignMessage()
+    {
+#if UNITY_WEBGL
+        var personalSignRequest = new EthPersonalSignUnityRequest(GetUnityRpcRequestClientFactory());
+        yield return personalSignRequest.SendRequest(new HexUTF8String(InputSignMessage.text));
+        if (personalSignRequest.Exception != null)
+        {
+            Debug.Log("Error signing message");
+            DisplayError(personalSignRequest.Exception.Message);
+            yield break;
+        }
+        LblSignedMessage.text = personalSignRequest.Result;
+#else
+       
+        PrivateKey = InputPrivateKey.text;
+        var signer = new EthereumMessageSigner();
+        LblSignedMessage.text = signer.EncodeUTF8AndSign(InputSignMessage.text, new EthECKey(PrivateKey));
+        yield break;
+
+#endif
     }
 
 
