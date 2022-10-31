@@ -6,8 +6,10 @@ using Nethereum.ABI.Model;
 using Nethereum.Contracts;
 using Nethereum.Contracts.CQS;
 using Nethereum.Contracts.Extensions;
+using Nethereum.HdWallet;
 using Nethereum.Unity.Rpc;
 using UnityEngine;
+using UnityEngine.Assertions;
 
 public class TokenDeployAndSendCoroutinesUnityWebRequest : MonoBehaviour {
 
@@ -136,14 +138,20 @@ public class TokenDeployAndSendCoroutinesUnityWebRequest : MonoBehaviour {
             return EventExtensions.GetEventABI<TransferEventDTO>();
         }
     }
+   
 
     // Use this for initialization
     void Start () {
 
         Debug.Log("Starting TokenDeployAndSendCoroutinesUnityWebRequest example");
+       
+        //
+
         //StartCoroutine(DeployAndTransferToken());
         StartCoroutine(DeployAndGetArrayStruct());
     }
+
+    
 
     public IEnumerator DeployAndGetArrayStruct()
     {

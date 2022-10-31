@@ -13,6 +13,7 @@ using Nethereum.Unity.Contracts;
 using System.Numerics;
 using Nethereum.Hex.HexTypes;
 using Nethereum.Signer;
+using Nethereum.HdWallet;
 
 public class MultiplatformTransfer : MonoBehaviour
 {
@@ -43,6 +44,7 @@ public class MultiplatformTransfer : MonoBehaviour
 
     void Start()
     {
+
         if (IsWebGL())
         {
             InputUrl.enabled = false;
@@ -52,6 +54,8 @@ public class MultiplatformTransfer : MonoBehaviour
         }
         else
         {
+         
+
             InputUrl.text = Url;
             InputPrivateKey.text = PrivateKey;
             InputChainId.text = ChainId.ToString();
