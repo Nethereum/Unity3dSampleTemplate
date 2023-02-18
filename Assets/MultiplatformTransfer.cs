@@ -5,15 +5,22 @@ using Nethereum.Unity.Rpc;
 using Nethereum.RPC.Eth.DTOs;
 using Nethereum.Util;
 using Debug = UnityEngine.Debug;
-#if UNITY_WEBGL
-  using Nethereum.Unity.Metamask;
-#endif
+//#if UNITY_WEBGL
+//  using Nethereum.Unity.Metamask;
+//#endif
 using Nethereum.Unity.FeeSuggestions;
 using Nethereum.Unity.Contracts;
 using System.Numerics;
 using Nethereum.Hex.HexTypes;
 using Nethereum.Signer;
 using Nethereum.HdWallet;
+using System.Threading.Tasks;
+using Nethereum.Web3;
+using Nethereum.Metamask;
+using Nethereum.Unity.Metamask;
+using Nethereum.RPC.Fee1559Suggestions;
+using System.Net;
+using Nethereum.Web3.Accounts;
 
 public class MultiplatformTransfer : MonoBehaviour
 {
@@ -76,13 +83,63 @@ public class MultiplatformTransfer : MonoBehaviour
 #endif
     }
 
-    public void TransferRequest()
+    public async void TransferRequest()
     {
-        StartCoroutine(TransferEther());
+        //StartCoroutine(TransferEtherUsingCoroutines());
+        await TransferEtherUsingWeb3inWebGlOrNative();
     }
 
+    public async Task TransferEtherUsingWeb3inWebGlOrNative()
+    {
+        IWeb3 web3 = null;
+        string selectedAccount = string.Empty;
+        AddressTo = InputAddressTo.text;
+        Amount = System.Decimal.Parse(InputAmount.text);
+        var receivingAddress = AddressTo;
+#if UNITY_WEBGL
+        if (IsWebGL())
+        {
+           
+            var metamaskHost = MetamaskWebGlHostProvider.CreateOrGetCurrentInstance();
+            metamaskHost.SelectedAccountChanged += MetamaskHost_SelectedAccountChanged;
+            await metamaskHost.EnableProviderAsync();
+            web3 = await metamaskHost.GetWeb3Async();
+            selectedAccount = metamaskHost.SelectedAccount;
+        }
+        else
+        {
+#endif
+            Url = InputUrl.text;
+            PrivateKey = InputPrivateKey.text;
+            ChainId = BigInteger.Parse(InputChainId.text);
+            var account = new Account(PrivateKey, ChainId);
+            web3 = new Web3(account, Url);
+            selectedAccount = account.Address;
+#if UNITY_WEBGL
+        }
+#endif
 
-    public IEnumerator TransferEther()
+      
+        
+        var timePreferenceFeeSuggesionStrategy = web3.FeeSuggestion.GetTimePreferenceFeeSuggestionStrategy();
+        var fee = await timePreferenceFeeSuggesionStrategy.SuggestFeeAsync();
+        var nonce = await web3.Eth.Transactions.GetTransactionCount.SendRequestAsync(selectedAccount);
+        var service = web3.Eth.GetEtherTransferService();
+        var receipt = await service.TransferEtherAndWaitForReceiptAsync(AddressTo, Amount, fee.MaxPriorityFeePerGas.Value, fee.MaxFeePerGas.Value, 
+            null, nonce.Value);
+        ResultTxnHash.text = receipt.TransactionHash;
+        var balance = await web3.Eth.GetBalance.SendRequestAsync(AddressTo);
+        BalanceAddressTo = UnitConversion.Convert.FromWei(balance.Value);
+        ResultBalanceAddressTo.text = BalanceAddressTo.ToString();
+    }
+
+    private Task MetamaskHost_SelectedAccountChanged(string arg)
+    {
+        ResultTxnHash.text = arg;
+        return Task.CompletedTask;
+    }
+
+    public IEnumerator TransferEtherUsingCoroutines()
     {
       
         AddressTo = InputAddressTo.text;

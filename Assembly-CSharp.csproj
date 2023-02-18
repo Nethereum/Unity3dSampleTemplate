@@ -8,7 +8,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <RootNamespace></RootNamespace>
+    <RootNamespace>
+    </RootNamespace>
     <ProjectGuid>{18E69904-7BB7-70FB-CA97-0185C0817080}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -60,6 +61,7 @@
     <Compile Include="Assets\EtherTransferCoroutinesUnityWebRequest.cs" />
     <Compile Include="Assets\TokenDeployAndSendCoroutinesUnityWebRequest.cs" />
     <Compile Include="Assets\UITabs\scripts\TabsUIHorizontal.cs" />
+    <Compile Include="Assets\HdWalletExample.cs" />
     <Compile Include="Assets\UITabs\scripts\TabsUI.cs" />
     <Compile Include="Assets\GetLatestBlockVanillaNethereum.cs" />
     <Compile Include="Assets\MultiplatformTransfer.cs" />
@@ -67,7 +69,6 @@
     <Compile Include="Assets\UITabs\scripts\TabButtonUI.cs" />
     <Compile Include="Assets\UITabs\scripts\TabsUIVertical.cs" />
     <Compile Include="Assets\DisableInWebGL.cs" />
-    <Compile Include="Assets\HdWalletExample.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
@@ -307,12 +308,6 @@
     <Reference Include="Nethereum.Contracts">
       <HintPath>Assets\Plugins\Nethereum.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Nethereum.Unity.Metamask">
-      <HintPath>Assets\Plugins\Nethereum.Unity.Metamask.dll</HintPath>
-    </Reference>
-    <Reference Include="Nethereum.Util">
-      <HintPath>Assets\Plugins\Nethereum.Util.dll</HintPath>
-    </Reference>
     <Reference Include="Nethereum.RPC">
       <HintPath>Assets\Plugins\Nethereum.RPC.dll</HintPath>
     </Reference>
@@ -322,14 +317,14 @@
     <Reference Include="Nethereum.Siwe.Core">
       <HintPath>Assets\Plugins\Nethereum.Siwe.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Extensions.Logging.Abstractions">
-      <HintPath>Assets\Plugins\Microsoft.Extensions.Logging.Abstractions.dll</HintPath>
+    <Reference Include="Nethereum.Metamask">
+      <HintPath>Assets\Plugins\Nethereum.Metamask.dll</HintPath>
+    </Reference>
+    <Reference Include="Nethereum.UI">
+      <HintPath>Assets\Plugins\Nethereum.UI.dll</HintPath>
     </Reference>
     <Reference Include="Nethereum.Accounts">
       <HintPath>Assets\Plugins\Nethereum.Accounts.dll</HintPath>
-    </Reference>
-    <Reference Include="Nethereum.ABI">
-      <HintPath>Assets\Plugins\Nethereum.ABI.dll</HintPath>
     </Reference>
     <Reference Include="Nethereum.GnosisSafe">
       <HintPath>Assets\Plugins\Nethereum.GnosisSafe.dll</HintPath>
@@ -340,17 +335,11 @@
     <Reference Include="Nethereum.Signer">
       <HintPath>Assets\Plugins\Nethereum.Signer.dll</HintPath>
     </Reference>
-    <Reference Include="NBitcoin">
-      <HintPath>Assets\Plugins\NBitcoin.dll</HintPath>
-    </Reference>
     <Reference Include="BouncyCastle.Crypto">
       <HintPath>Assets\Plugins\BouncyCastle.Crypto.dll</HintPath>
     </Reference>
     <Reference Include="Nethereum.BlockchainProcessing">
       <HintPath>Assets\Plugins\Nethereum.BlockchainProcessing.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.VisualScripting.Antlr3.Runtime">
-      <HintPath>Library\PackageCache\com.unity.visualscripting@1.7.8\Runtime\VisualScripting.Flow\Dependencies\NCalc\Unity.VisualScripting.Antlr3.Runtime.dll</HintPath>
     </Reference>
     <Reference Include="Nethereum.KeyStore">
       <HintPath>Assets\Plugins\Nethereum.KeyStore.dll</HintPath>
@@ -358,29 +347,56 @@
     <Reference Include="Nethereum.JsonRpc.Client">
       <HintPath>Assets\Plugins\Nethereum.JsonRpc.Client.dll</HintPath>
     </Reference>
-    <Reference Include="Nethereum.HdWallet">
-      <HintPath>Assets\Plugins\Nethereum.HdWallet.dll</HintPath>
-    </Reference>
     <Reference Include="Nethereum.JsonRpc.RpcClient">
       <HintPath>Assets\Plugins\Nethereum.JsonRpc.RpcClient.dll</HintPath>
-    </Reference>
-    <Reference Include="Nethereum.Siwe">
-      <HintPath>Assets\Plugins\Nethereum.Siwe.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>Library\PackageCache\com.unity.nuget.newtonsoft-json@3.0.2\Runtime\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="Nethereum.Siwe">
+      <HintPath>Assets\Plugins\Nethereum.Siwe.dll</HintPath>
+    </Reference>
     <Reference Include="Nethereum.RLP">
       <HintPath>Assets\Plugins\Nethereum.RLP.dll</HintPath>
-    </Reference>
-    <Reference Include="Nethereum.Hex">
-      <HintPath>Assets\Plugins\Nethereum.Hex.dll</HintPath>
     </Reference>
     <Reference Include="Nethereum.Unity">
       <HintPath>Assets\Plugins\Nethereum.Unity.dll</HintPath>
     </Reference>
+    <Reference Include="Nethereum.Util">
+      <HintPath>Assets\Plugins\Nethereum.Util.dll</HintPath>
+    </Reference>
+    <Reference Include="Nethereum.UI.Host">
+      <HintPath>Assets\Plugins\Nethereum.UI.Host.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Logging.Abstractions">
+      <HintPath>Assets\Plugins\Microsoft.Extensions.Logging.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Nethereum.ABI">
+      <HintPath>Assets\Plugins\Nethereum.ABI.dll</HintPath>
+    </Reference>
+    <Reference Include="NBitcoin">
+      <HintPath>Assets\Plugins\NBitcoin.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.VisualScripting.Antlr3.Runtime">
+      <HintPath>Library\PackageCache\com.unity.visualscripting@1.7.8\Runtime\VisualScripting.Flow\Dependencies\NCalc\Unity.VisualScripting.Antlr3.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="Nethereum.HdWallet">
+      <HintPath>Assets\Plugins\Nethereum.HdWallet.dll</HintPath>
+    </Reference>
+    <Reference Include="Nethereum.Hex">
+      <HintPath>Assets\Plugins\Nethereum.Hex.dll</HintPath>
+    </Reference>
+    <Reference Include="Nethereum.Unity.Metamask">
+      <HintPath>Assets\Plugins\Nethereum.Unity.Metamask.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Cecil">
+      <HintPath>Library\PackageCache\com.unity.nuget.mono-cecil@1.10.1\Mono.Cecil.dll</HintPath>
+    </Reference>
     <Reference Include="Nethereum.Web3">
       <HintPath>Assets\Plugins\Nethereum.Web3.dll</HintPath>
+    </Reference>
+    <Reference Include="Nethereum.Merkle.Patricia">
+      <HintPath>Assets\Plugins\Nethereum.Merkle.Patricia.dll</HintPath>
     </Reference>
     <Reference Include="mscorlib">
       <HintPath>C:\Program Files\Unity\Hub\Editor\2021.3.6f1\Editor\Data\UnityReferenceAssemblies\unity-4.8-api\mscorlib.dll</HintPath>
@@ -763,23 +779,11 @@
     <Reference Include="Unity.VSCode.Editor">
       <HintPath>Library\ScriptAssemblies\Unity.VSCode.Editor.dll</HintPath>
     </Reference>
-    <Reference Include="Unity.Services.Core.Analytics">
-      <HintPath>Library\ScriptAssemblies\Unity.Services.Core.Analytics.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.VisualScripting.Shared.Editor">
-      <HintPath>Library\ScriptAssemblies\Unity.VisualScripting.Shared.Editor.dll</HintPath>
-    </Reference>
     <Reference Include="Unity.TextMeshPro.Editor">
       <HintPath>Library\ScriptAssemblies\Unity.TextMeshPro.Editor.dll</HintPath>
     </Reference>
-    <Reference Include="Unity.Services.Core.Environments">
-      <HintPath>Library\ScriptAssemblies\Unity.Services.Core.Environments.dll</HintPath>
-    </Reference>
     <Reference Include="Unity.VisualStudio.Editor">
       <HintPath>Library\ScriptAssemblies\Unity.VisualStudio.Editor.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.Timeline.Editor">
-      <HintPath>Library\ScriptAssemblies\Unity.Timeline.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Timeline">
       <HintPath>Library\ScriptAssemblies\Unity.Timeline.dll</HintPath>
@@ -814,14 +818,34 @@
     <Reference Include="Unity.Services.Core">
       <HintPath>Library\ScriptAssemblies\Unity.Services.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Unity.VisualScripting.State">
-      <HintPath>Library\ScriptAssemblies\Unity.VisualScripting.State.dll</HintPath>
-    </Reference>
     <Reference Include="Unity.VisualScripting.Core">
       <HintPath>Library\ScriptAssemblies\Unity.VisualScripting.Core.dll</HintPath>
     </Reference>
+    <Reference Include="Unity.Services.Core.Analytics">
+      <HintPath>Library\ScriptAssemblies\Unity.Services.Core.Analytics.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.VisualScripting.Shared.Editor">
+      <HintPath>Library\ScriptAssemblies\Unity.VisualScripting.Shared.Editor.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Services.Core.Environments">
+      <HintPath>Library\ScriptAssemblies\Unity.Services.Core.Environments.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Timeline.Editor">
+      <HintPath>Library\ScriptAssemblies\Unity.Timeline.Editor.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.VisualScripting.State">
+      <HintPath>Library\ScriptAssemblies\Unity.VisualScripting.State.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="WebGLThreadingPatcher.Runtime.csproj">
+      <Project>{90DE441C-B03D-6427-F608-2E6F20929AE6}</Project>
+      <Name>WebGLThreadingPatcher.Runtime</Name>
+    </ProjectReference>
+    <ProjectReference Include="WebGLThreadingPatcher.Editor.csproj">
+      <Project>{B4A3E479-B9AB-8866-BD73-4B9893BC7BFA}</Project>
+      <Name>WebGLThreadingPatcher.Editor</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />

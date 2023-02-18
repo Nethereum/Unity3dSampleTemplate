@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using Nethereum.Unity.Rpc;
 using Nethereum.BlockchainProcessing.BlockStorage.Entities;
 using System;
-
+using Nethereum.Web3;
 
 public class GetLatestBlockCoroutine : MonoBehaviour
 {
@@ -21,9 +21,18 @@ public class GetLatestBlockCoroutine : MonoBehaviour
         InputUrl.text = Url;
     }
 
-    public void GetBlockNumberRequest()
+    public async void GetBlockNumberRequest()
     {
-        StartCoroutine(GetBlockNumber());
+        Url = InputUrl.text;
+        //This is to workaround issue with certificates https://forum.unity.com/threads/how-to-allow-self-signed-certificate.522183/
+        //Uncomment if needed
+        //ServicePointManager.ServerCertificateValidationCallback = TrustCertificate;
+        var web3 = new Web3(new UnityWebRequestRpcTaskClient(new Uri(InputUrl.text)));
+
+        var blockNumber = await web3.Eth.Blocks.GetBlockNumber.SendRequestAsync();
+        ResultBlockNumber.text = blockNumber.Value.ToString();
+
+        //StartCoroutine(GetBlockNumber());
     }
 
     public IEnumerator GetBlockNumber()
