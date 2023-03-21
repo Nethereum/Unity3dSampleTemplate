@@ -8,8 +8,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <RootNamespace>
-    </RootNamespace>
+    <RootNamespace></RootNamespace>
     <ProjectGuid>{18E69904-7BB7-70FB-CA97-0185C0817080}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -64,11 +63,12 @@
     <Compile Include="Assets\HdWalletExample.cs" />
     <Compile Include="Assets\UITabs\scripts\TabsUI.cs" />
     <Compile Include="Assets\GetLatestBlockVanillaNethereum.cs" />
-    <Compile Include="Assets\MultiplatformTransfer.cs" />
+    <Compile Include="Assets\MultiplatformTransferCoroutine.cs" />
     <Compile Include="Assets\ChangeTextInWebGL.cs" />
     <Compile Include="Assets\UITabs\scripts\TabButtonUI.cs" />
     <Compile Include="Assets\UITabs\scripts\TabsUIVertical.cs" />
     <Compile Include="Assets\DisableInWebGL.cs" />
+    <Compile Include="Assets\MultiplatformTransferTaskWeb3.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
@@ -335,6 +335,9 @@
     <Reference Include="Nethereum.Signer">
       <HintPath>Assets\Plugins\Nethereum.Signer.dll</HintPath>
     </Reference>
+    <Reference Include="Nethereum.Merkle.Patricia">
+      <HintPath>Assets\Plugins\Nethereum.Merkle.Patricia.dll</HintPath>
+    </Reference>
     <Reference Include="BouncyCastle.Crypto">
       <HintPath>Assets\Plugins\BouncyCastle.Crypto.dll</HintPath>
     </Reference>
@@ -395,8 +398,8 @@
     <Reference Include="Nethereum.Web3">
       <HintPath>Assets\Plugins\Nethereum.Web3.dll</HintPath>
     </Reference>
-    <Reference Include="Nethereum.Merkle.Patricia">
-      <HintPath>Assets\Plugins\Nethereum.Merkle.Patricia.dll</HintPath>
+    <Reference Include="Nethereum.Merkle">
+      <HintPath>Assets\Plugins\Nethereum.Merkle.dll</HintPath>
     </Reference>
     <Reference Include="mscorlib">
       <HintPath>C:\Program Files\Unity\Hub\Editor\2021.3.6f1\Editor\Data\UnityReferenceAssemblies\unity-4.8-api\mscorlib.dll</HintPath>

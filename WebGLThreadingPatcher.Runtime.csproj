@@ -345,6 +345,9 @@
     <Reference Include="log4netPlastic">
       <HintPath>Library\PackageCache\com.unity.collab-proxy@1.17.2\Lib\Editor\PlasticSCM\log4netPlastic.dll</HintPath>
     </Reference>
+    <Reference Include="Nethereum.Merkle.Patricia">
+      <HintPath>Assets\Plugins\Nethereum.Merkle.Patricia.dll</HintPath>
+    </Reference>
     <Reference Include="BouncyCastle.Crypto">
       <HintPath>Assets\Plugins\BouncyCastle.Crypto.dll</HintPath>
     </Reference>
@@ -420,8 +423,8 @@
     <Reference Include="Nethereum.Web3">
       <HintPath>Assets\Plugins\Nethereum.Web3.dll</HintPath>
     </Reference>
-    <Reference Include="Nethereum.Merkle.Patricia">
-      <HintPath>Assets\Plugins\Nethereum.Merkle.Patricia.dll</HintPath>
+    <Reference Include="Nethereum.Merkle">
+      <HintPath>Assets\Plugins\Nethereum.Merkle.dll</HintPath>
     </Reference>
     <Reference Include="mscorlib">
       <HintPath>C:\Program Files\Unity\Hub\Editor\2021.3.6f1\Editor\Data\UnityReferenceAssemblies\unity-4.8-api\mscorlib.dll</HintPath>
@@ -798,11 +801,11 @@
     <Reference Include="System.Xml.XPath.XDocument">
       <HintPath>C:\Program Files\Unity\Hub\Editor\2021.3.6f1\Editor\Data\UnityReferenceAssemblies\unity-4.8-api\Facades\System.Xml.XPath.XDocument.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEngine.UI">
-      <HintPath>Library\ScriptAssemblies\UnityEngine.UI.dll</HintPath>
-    </Reference>
     <Reference Include="UnityEditor.UI">
       <HintPath>Library\ScriptAssemblies\UnityEditor.UI.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UI">
+      <HintPath>Library\ScriptAssemblies\UnityEngine.UI.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
