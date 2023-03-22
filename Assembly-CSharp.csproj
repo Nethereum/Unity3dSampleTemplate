@@ -69,6 +69,8 @@
     <Compile Include="Assets\UITabs\scripts\TabsUIVertical.cs" />
     <Compile Include="Assets\DisableInWebGL.cs" />
     <Compile Include="Assets\MultiplatformTransferTaskWeb3.cs" />
+    <Compile Include="Assets\MultiplatformErc20Coroutine.cs" />
+    <Compile Include="Assets\EIP20ContractDefinition.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">

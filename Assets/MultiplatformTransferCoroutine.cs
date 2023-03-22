@@ -45,7 +45,7 @@ public class MultiplatformTransferCoroutine : MonoBehaviour
     void Start()
     {
 
-        if (IsWebGL())
+        if (IsWebGL()) // using pk etc only on desktop as an example
         {
             InputUrl.enabled = false;
             InputPrivateKey.enabled = false;
@@ -55,7 +55,6 @@ public class MultiplatformTransferCoroutine : MonoBehaviour
         else
         {
          
-
             InputUrl.text = Url;
             InputPrivateKey.text = PrivateKey;
             InputChainId.text = ChainId.ToString();
@@ -80,12 +79,6 @@ public class MultiplatformTransferCoroutine : MonoBehaviour
     {
         StartCoroutine(TransferEtherUsingCoroutines());
         
-    }
-
-    private Task MetamaskHost_SelectedAccountChanged(string arg)
-    {
-        ResultTxnHash.text = arg;
-        return Task.CompletedTask;
     }
 
     public IEnumerator TransferEtherUsingCoroutines()
