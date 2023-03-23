@@ -74,7 +74,7 @@
         const parsedFallback = UTF8ToString(fallback);
         let parsedMessage = JSON.parse(parsedMessageStr);
         try {
-            //console.log(parsedMessage);
+            console.log(parsedMessage);
             const response = await ethereum.request(parsedMessage);
             let rpcResponse = {
                 jsonrpc: "2.0",
@@ -82,7 +82,7 @@
                 id: parsedMessage.id,
                 error: null
             }
-            //console.log(rpcResponse);
+            console.log(rpcResponse);
 
             var json = JSON.stringify(rpcResponse);
             //console.log(json);
@@ -125,11 +125,11 @@
         const parsedMessageStr = UTF8ToString(message);
         const parsedCallback = UTF8ToString(callback);
       
-        //console.log(parsedCallback);
+        console.log(parsedCallback);
         let parsedMessage = JSON.parse(parsedMessageStr);
         try {
             
-            //console.log(parsedMessage);
+            console.log(parsedMessage);
             const response = await ethereum.request(parsedMessage);
             let rpcResponse = {
                 jsonrpc: "2.0",
@@ -137,10 +137,10 @@
                 id: parsedMessage.id,
                 error: null
             }
-            //console.log(rpcResponse);
+            console.log(rpcResponse);
 
             var json = JSON.stringify(rpcResponse);
-            //console.log(json);
+            console.log(json);
            
             var len = lengthBytesUTF8(json) + 1;
             var strPtr = _malloc(len);
@@ -148,7 +148,7 @@
             Module.dynCall_vi(callback, strPtr);
 
         } catch (e) {
-            //console.log(e);
+            console.log(e);
             let rpcResonseError = {
                 jsonrpc: "2.0",
                 id: parsedMessage.id,
@@ -157,7 +157,7 @@
                 }
             }
             var json = JSON.stringify(rpcResonseError);
-            //console.log(json);
+            console.log(json);
             var len = lengthBytesUTF8(json) + 1;
             var strPtr = _malloc(len);
             stringToUTF8(json, strPtr, len);

@@ -69,8 +69,8 @@ public partial class TokenDeployAndSendCoroutinesUnityWebRequest : MonoBehaviour
        
         //
 
-        //StartCoroutine(DeployAndTransferToken());
-        StartCoroutine(DeployAndGetArrayStruct());
+        StartCoroutine(DeployAndTransferToken());
+        //StartCoroutine(DeployAndGetArrayStruct());
     }
 
     
@@ -134,16 +134,14 @@ public partial class TokenDeployAndSendCoroutinesUnityWebRequest : MonoBehaviour
         transactionRequest.UseLegacyAsDefault = true;
 
 
-        var deployContract = new EIP20Deployment()
+        var deployContract = new StandardTokenDeployment()
         {
-            InitialAmount = 10000,
+            TotalSupply = 10000,
             FromAddress = account,
-            TokenName = "TST",
-            TokenSymbol = "TST"
         };
 
         //deploy the contract and True indicates we want to estimate the gas
-        yield return transactionRequest.SignAndSendDeploymentContractTransaction<EIP20DeploymentBase>(deployContract);
+        yield return transactionRequest.SignAndSendDeploymentContractTransaction<StandardTokenDeployment>(deployContract);
 
         if (transactionRequest.Exception != null)
         {
@@ -164,7 +162,7 @@ public partial class TokenDeployAndSendCoroutinesUnityWebRequest : MonoBehaviour
         Debug.Log("Deployment contract address:" + deploymentReceipt.ContractAddress);
 
         //Query request using our acccount and the contracts address (no parameters needed and default values)
-        var queryRequest = new QueryUnityRequest<BalanceOfFunction, BalanceOfFunctionOutput>(url, account);
+        var queryRequest = new QueryUnityRequest<BalanceOfFunction, BalanceOfOutputDTO>(url, account);
         yield return queryRequest.Query(new BalanceOfFunction(){Owner = account}, deploymentReceipt.ContractAddress);
 
         //Getting the dto response already decoded
@@ -181,7 +179,7 @@ public partial class TokenDeployAndSendCoroutinesUnityWebRequest : MonoBehaviour
         {
             FromAddress = account,
             To = newAddress,
-            Value = 1000,
+            TokenAmount = 1000,
 
         };
 

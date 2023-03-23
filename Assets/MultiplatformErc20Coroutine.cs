@@ -79,16 +79,14 @@ public class MultiplatformErc20Coroutine : MonoBehaviour
         transactionRequest.UseLegacyAsDefault = true;
 
 
-        var deployContract = new EIP20Deployment()
+        var deployContract = new StandardTokenDeployment()
         {
-            InitialAmount = 10000,
-            TokenName = "TST",
-            TokenSymbol = "TST",
+            TotalSupply = Nethereum.Web3.Web3.Convert.ToWei(10000000),
             FromAddress = _selectedAccountAddress
         };
 
         //deploy the contract and True indicates we want to estimate the gas
-        yield return transactionRequest.SignAndSendDeploymentContractTransaction<EIP20DeploymentBase>(deployContract);
+        yield return transactionRequest.SignAndSendDeploymentContractTransaction(deployContract);
 
         if (transactionRequest.Exception != null)
         {
@@ -129,7 +127,7 @@ public class MultiplatformErc20Coroutine : MonoBehaviour
         var transferFunction = new TransferFunction
         {
             To = AddressTo,
-            Value = Nethereum.Web3.Web3.Convert.ToWei(Amount),
+            TokenAmount = Nethereum.Web3.Web3.Convert.ToWei(Amount),
             FromAddress = _selectedAccountAddress
         };
 
@@ -163,7 +161,7 @@ public class MultiplatformErc20Coroutine : MonoBehaviour
 
         Debug.Log("Transferred amount from get logs event: " + eventDecoded[0].Event.Value);
 
-        var queryRequest = new QueryUnityRequest<BalanceOfFunction, BalanceOfFunctionOutput>(GetUnityRpcRequestClientFactory(), _selectedAccountAddress);
+        var queryRequest = new QueryUnityRequest<BalanceOfFunction, BalanceOfOutputDTO>(GetUnityRpcRequestClientFactory(), _selectedAccountAddress);
         yield return queryRequest.Query(new BalanceOfFunction() { Owner = AddressTo }, contractAddress);
 
         //Getting the dto response already decoded
