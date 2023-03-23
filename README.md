@@ -15,11 +15,11 @@ The code demonstrates:
 * Cross Platform architecture (Coroutines) reuse your code using different deployments Native /Desktop or Browser using Metamask)
 * Metamask connectivity in browser
 
-**Note:** 
+**Important Notes:** 
 * WebGl if using Web3 / Tasks requires the WebGLThreadingPatcher https://github.com/VolodymyrBS/WebGLThreadingPatcher.
 * To support WebGl and AOT this sample uses the Net472AOT or NetstandardAOT dlls with the custom Json.Net Unity by Unity
 * Please remember to remove System.HttpClient and UnityEngine of the Nethereum release package if included
-*  Nethereum.Unity.Metamask is only supported in Webgl, ignore it for other platforms (not the editor)
+* Nethereum.Unity.Metamask is only supported in Webgl at the moment Metamask SDK will be support currently work in progresss.
 ![image](https://user-images.githubusercontent.com/562371/194084421-2c3dff68-f61b-479e-b877-2d62ccb42859.png)
 * If creating a custom index.html file, or rebuilding webgl in a new folder, the script needs to instantiate ```nethereumUnityInstance``` as per the example here: https://github.com/Nethereum/Unity3dSampleTemplate/blob/master/webgl/index.html#L112
 
