@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebGLThreadingPatcher.Runti
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebGLThreadingPatcher.Editor", "WebGLThreadingPatcher.Editor.csproj", "{B4A3E479-B9AB-8866-BD73-4B9893BC7BFA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp-Editor", "Assembly-CSharp-Editor.csproj", "{5292CAD9-0947-91BE-52BC-5B1E13AE5781}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -25,6 +27,10 @@ Global
 		{B4A3E479-B9AB-8866-BD73-4B9893BC7BFA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B4A3E479-B9AB-8866-BD73-4B9893BC7BFA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B4A3E479-B9AB-8866-BD73-4B9893BC7BFA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5292CAD9-0947-91BE-52BC-5B1E13AE5781}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5292CAD9-0947-91BE-52BC-5B1E13AE5781}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5292CAD9-0947-91BE-52BC-5B1E13AE5781}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5292CAD9-0947-91BE-52BC-5B1E13AE5781}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
