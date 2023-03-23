@@ -16,7 +16,7 @@ The code demonstrates:
 * Metamask connectivity in browser
 
 **Note:** 
-* WebGl only supports coroutines UnityWebRequest. To build WebGl if having issues, uncheck Development Build.
+* WebGl if using Web3 / Tasks requires the WebGLThreadingPatcher https://github.com/VolodymyrBS/WebGLThreadingPatcher.
 * To support WebGl and AOT this sample uses the Net472AOT or NetstandardAOT dlls with the custom Json.Net Unity by Unity
 * Please remember to remove System.HttpClient and UnityEngine of the Nethereum release package if included
 *  Nethereum.Unity.Metamask is only supported in Webgl, ignore it for other platforms (not the editor)
