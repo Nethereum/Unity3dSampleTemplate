@@ -1,11 +1,11 @@
 ﻿using Nethereum.Hex.HexTypes;
 using Nethereum.RPC.Eth.DTOs;
+using Nethereum.Signer;
 using Nethereum.Unity.Contracts;
-//#if UNITY_WEBGL
-//  using Nethereum.Unity.Metamask;
-//#endif
+#if UNITY_WEBGL
+  using Nethereum.Unity.Metamask;
+#endif
 using Nethereum.Unity.FeeSuggestions;
-using Nethereum.Unity.Metamask;
 using Nethereum.Unity.Rpc;
 using Nethereum.Util;
 using System.Collections;

@@ -3,13 +3,13 @@ using Nethereum.Contracts;
 using Nethereum.Hex.HexTypes;
 using Nethereum.Metamask;
 using Nethereum.Unity.Contracts;
-//#if UNITY_WEBGL
-//  using Nethereum.Unity.Metamask;
-//#endif
-using Nethereum.Unity.Metamask;
+#if UNITY_WEBGL
+  using Nethereum.Unity.Metamask;
+#endif
 using Nethereum.Unity.Rpc;
 using Nethereum.Util;
 using Nethereum.Web3;
+using Nethereum.Web3.Accounts;
 using System;
 using System.Collections;
 using System.Numerics;
@@ -50,9 +50,10 @@ public class MultiplatformErc20Web3Task : MonoBehaviour
             InputUrl.enabled = false;
             InputPrivateKey.enabled = false;
             InputChainId.enabled = false;
-            metamaskHost = MetamaskWebglHostProvider.CreateOrGetCurrentInstance();
-            metamaskHost.SelectedAccountChanged += MetamaskHost_SelectedAccountChanged;
-
+            #if UNITY_WEBGL
+                metamaskHost = MetamaskWebglHostProvider.CreateOrGetCurrentInstance();
+                metamaskHost.SelectedAccountChanged += MetamaskHost_SelectedAccountChanged;
+            #endif
         }
         else
         {

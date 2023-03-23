@@ -1,10 +1,9 @@
 ﻿using Nethereum.Contracts;
 using Nethereum.Hex.HexTypes;
 using Nethereum.Unity.Contracts;
-//#if UNITY_WEBGL
-//  using Nethereum.Unity.Metamask;
-//#endif
-using Nethereum.Unity.Metamask;
+#if UNITY_WEBGL
+  using Nethereum.Unity.Metamask;
+#endif
 using Nethereum.Unity.Rpc;
 using Nethereum.Util;
 using System.Collections;

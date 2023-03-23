@@ -2,15 +2,14 @@
 using UnityEngine.UI;
 using Nethereum.Util;
 using Debug = UnityEngine.Debug;
-//#if UNITY_WEBGL
-//  using Nethereum.Unity.Metamask;
-//#endif
+#if UNITY_WEBGL
+  using Nethereum.Unity.Metamask;
+#endif
 using System.Numerics;
 using Nethereum.Hex.HexTypes;
 using System.Threading.Tasks;
 using Nethereum.Web3;
 using Nethereum.Metamask;
-using Nethereum.Unity.Metamask;
 using Nethereum.Web3.Accounts;
 using System;
 
@@ -50,8 +49,10 @@ public class MultiplatformTransferTaskWeb3 : MonoBehaviour
             InputUrl.enabled = false;
             InputPrivateKey.enabled = false;
             InputChainId.enabled = false;
+#if UNITY_WEBGL
             metamaskHost = MetamaskWebglHostProvider.CreateOrGetCurrentInstance();
             metamaskHost.SelectedAccountChanged += MetamaskHost_SelectedAccountChanged;
+#endif
         }
         else
         {
