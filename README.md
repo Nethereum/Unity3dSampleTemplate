@@ -1,10 +1,10 @@
 # Unity3d Sample Template Net472 / Netstandard
 
-Sample template to get started Unity3d development using Nethereum. It includes the necessary dlls from the Net472AOT Common release (commmon libraries for general tasks, not specialised ones like geth, reactive, etc) in the asset folder. Netstandard libraries work the same. You may not need some of the libraries so you can remove them, depending on your needs.
+Sample template to get started Unity3d development using Nethereum. It includes the necessary dlls from the Net472AOT Common release in the asset folder (other none specialised ones like geth, reactive, etc are not included but can be downloaded from Nethereum releases if needed). Netstandard libraries work the same. Some libraries you might not need, like Nethereum.HD and NBitcoin to support Hierarchical Deterministic Wallets so you can remove them.
 
-Unity Version used is 2021.3.6f1 LTS
+Unity Version used is 2022.1.23 
 
-Dlls: Nethereum, dependencies (BouncyCastle, Microsoft.Extensions.Logging.Abstractions, NBitcoin.dll for HD Wallet)
+Dlls included: Nethereum, dependencies (BouncyCastle, Microsoft.Extensions.Logging.Abstractions, NBitcoin.dll for HD Wallet)
 
 The code demonstrates:
 
@@ -12,16 +12,18 @@ The code demonstrates:
 * Ether transfer using Unity.UI and coroutines
 * Using 1559 Suggestion strategies or Legacy mode when tranfering Ether
 * Smart contract deployment (ERC20), Transactions (Transfer) and Querying (Balance)
-* Cross Platform architecture (Coroutines) reuse your code using different deployments Native /Desktop or Browser using Metamask)
+* Cross Platform architecture for both Coroutines and Task to enable the reuse of your code using different deployments Native /Desktop or Browser using Metamask)
 * Metamask connectivity in browser
 
-**Important Notes:** 
-* WebGl if using Web3 / Tasks requires the WebGLThreadingPatcher https://github.com/VolodymyrBS/WebGLThreadingPatcher.
-* To support WebGl and AOT this sample uses the Net472AOT or NetstandardAOT dlls with the custom Json.Net Unity by Unity
+## Important Notes:
+* All the examples are self contained, to simplify them, so when working with the browser you will need "Connect" per example.
+* WebGL: When using Web3 with Tasks this requires something like the WebGLThreadingPatcher https://github.com/VolodymyrBS/WebGLThreadingPatcher, or any other way to enable wasm with Task threading support.
+* To support AOT and WebGL this sample uses the Nethereum dlls packaged for Net472AOT or NetstandardAOT with the custom Newtonsoft Json.Net by Unity
 * Please remember to remove System.HttpClient and UnityEngine of the Nethereum release package if included
-* Nethereum.Unity.Metamask is only supported in Webgl at the moment Metamask SDK will be support currently work in progresss.
+* Nethereum.Unity.Metamask is only supported in WebGL at the moment, the Metamask SDK will be supported shortly, currently work in progresss (if you require access to small PoC let me know)
 ![image](https://user-images.githubusercontent.com/562371/194084421-2c3dff68-f61b-479e-b877-2d62ccb42859.png)
-* If creating a custom index.html file, or rebuilding webgl in a new folder, the script needs to instantiate ```nethereumUnityInstance``` as per the example here: https://github.com/Nethereum/Unity3dSampleTemplate/blob/master/webgl/index.html#L112
+* If creating a custom index.html file, or rebuilding webgl in a new folder, the script needs to instantiate ```nethereumUnityInstance``` as per the example here: https://github.com/Nethereum/Unity3dSampleTemplate/blob/master/webgl/index.html#L107
+* When building to Desktop and other platforms (not web), you will requited to use "https" instead of "http" as the newer versions of Unity validate this.
 
 ### Desktop demo
 
@@ -30,22 +32,20 @@ The code demonstrates:
 ### Browser demo
 ![Webgl](screenshots/BrowserWebglDemo.gif "Webgl")
 
+### Test Chain
 To run a local blockchain you can just use the preconfigured [testchains](https://github.com/Nethereum/Nethereum.Workbooks/tree/master/testchain/)
+All the examples use the chainId "444444444500" as default, needless to say you can change it to your own.
 
 ### BlockNumber query Async (vanilla Nethereum)
 ```csharp
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Net;
 using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
-using Nethereum.ABI.FunctionEncoding.Attributes;
 using UnityEngine;
 using UnityEngine.UI;
-using Nethereum.Contracts;
 using Nethereum.Web3;
-
+using System.Threading.Tasks;
+using Nethereum.Unity.Rpc;
 
 public class GetLatestBlockVanillaNethereum : MonoBehaviour {
 
@@ -55,15 +55,30 @@ public class GetLatestBlockVanillaNethereum : MonoBehaviour {
         return true;
     }
 
-    public string Url = "https://mainnet.infura.io";
-   
+    public string Url = "http://localhost:8545";
     public InputField ResultBlockNumber;
+    public InputField ResultBlockNumberConstant;
+    
     public InputField InputUrl;
 
     // Use this for initialization
-    void Start()
+    async void Start()
     {
         InputUrl.text = Url;
+        await CheckBlockNumberPeriodically();
+    }
+    public async Task CheckBlockNumberPeriodically()
+    {
+        var wait = 1000;
+        while (true)
+        {
+           await Task.Delay(wait);
+           wait = 1000;
+           var web3 = new Web3(new UnityWebRequestRpcTaskClient(new Uri(InputUrl.text)));
+            
+           var blockNumber = await web3.Eth.Blocks.GetBlockNumber.SendRequestAsync();
+           ResultBlockNumberConstant.text = blockNumber.Value.ToString();
+        }
     }
 
     public async void GetBlockNumber()
@@ -71,9 +86,8 @@ public class GetLatestBlockVanillaNethereum : MonoBehaviour {
         Url = InputUrl.text;
         //This is to workaround issue with certificates https://forum.unity.com/threads/how-to-allow-self-signed-certificate.522183/
         //Uncomment if needed
-        // ServicePointManager.ServerCertificateValidationCallback = TrustCertificate;
-        var web3 = new Web3(Url);
-        
+        //ServicePointManager.ServerCertificateValidationCallback = TrustCertificate;
+        var web3 = new Web3(new UnityWebRequestRpcTaskClient(new Uri(InputUrl.text)));
         var blockNumber = await web3.Eth.Blocks.GetBlockNumber.SendRequestAsync();
         ResultBlockNumber.text = blockNumber.Value.ToString();
     }
@@ -82,16 +96,13 @@ public class GetLatestBlockVanillaNethereum : MonoBehaviour {
 ### BlockNumber query Coroutines
 ```csharp
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using Nethereum.JsonRpc.UnityClient;
-using Nethereum.RPC.Eth.DTOs;
-using Nethereum.Util;
+using Nethereum.Unity.Rpc;
 
 public class GetLatestBlockCoroutine : MonoBehaviour
 {
-    public string Url = "https://mainnet.infura.io";
+    public string Url = "http://localhost:8545";
 
     public InputField ResultBlockNumber;
     public InputField InputUrl;
@@ -104,23 +115,31 @@ public class GetLatestBlockCoroutine : MonoBehaviour
 
     public void GetBlockNumberRequest()
     {
+        Url = InputUrl.text;
         StartCoroutine(GetBlockNumber());
     }
 
     public IEnumerator GetBlockNumber()
     {
-        Url = InputUrl.text;
 
-        var blockNumberRequest = new EthBlockNumberUnityRequest(Url);
+       var blockNumberRequest = new EthBlockNumberUnityRequest(InputUrl.text);
+ 
+       yield return blockNumberRequest.SendRequest();
 
-        yield return blockNumberRequest.SendRequest();
-
-        ResultBlockNumber.text = blockNumberRequest.Result.Value.ToString();
+        if (blockNumberRequest.Exception != null)
+        {
+            UnityEngine.Debug.Log(blockNumberRequest.Exception.Message);
+        }
+        else
+        {
+            ResultBlockNumber.text = blockNumberRequest.Result.Value.ToString();
+        }
+        
     }
-}
+ }
 
 ```
-## Simple Ether transfer
+## Simple Ether transfer using Coroutines 
 To transfer Ether Nethereum provides a specific Unity Request, the ```EthTransferUnityRequest```.
 
 The EthTransferUnityRequest it is instantiated with the "url" of our Ethereum client, the private key to be able to sign transactions and our account address (the same of the private key).
@@ -171,7 +190,26 @@ We can convert the result in Wei to Eth using the default Wei UnitConvertor.
 ```csharp
 Debug.Log("Balance of account:" + UnitConversion.Convert.FromWei(balanceRequest.Result.Value));
 ```
-## EIP 1559 Fee suggestion using the strategies provided and Legacy Mode 
+
+## Transfer using Task / Web3
+
+To transfer Ether using Web3 and Tasks we can use the same example as the Netherum playground http://playground.nethereum.com/csharp/id/1003
+
+```csharp
+
+var privateKey = "0x7580e7fb49df1c861f0050fae31c2224c6aba908e116b8da44ee8cd927b990b0";
+var chainId = 444444444500; //Nethereum test chain, chainId
+var account = new Account(privateKey, chainId);
+
+//Now let's create an instance of Web3 using our account pointing to our nethereum testchain
+var web3 = new Web3(account, "http://testchain.nethereum.com:8545");
+web3.TransactionManager.UseLegacyAsDefault = true; //Using legacy option instead of 1559
+// Lets transfer 1.11 Ether
+var transaction = await web3.Eth.GetEtherTransferService()
+	.TransferEtherAndWaitForReceiptAsync("0x13f022d72158410433cbd66f5dd8bf6d2d129924", 1.11m);
+```
+
+## EIP 1559 Fee suggestion using the strategies provided and Legacy Mode Coroutines
 Here are some examples of using the provided fee suggestion strategies using coroutines, TimePreference, MedianFeeHistory or LegacyMode to use the old mode or to use with other chains.
 
 To use LegacyMode you have to provide the GasPrice or it can be force the LegacyMode by setting ```UseLegacyAsDefault``` to true.
@@ -251,585 +289,156 @@ To use LegacyMode you have to provide the GasPrice or it can be force the Legacy
         }
 
 ```
+#EIP 1559 using Web3 / Tasks
 
-### Full sample
-```csharp
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Numerics;
-using System.Runtime.InteropServices;
-using Nethereum.ABI.FunctionEncoding.Attributes;
-using Nethereum.ABI.Model;
-using Nethereum.Contracts;
-using Nethereum.Contracts.CQS;
-using Nethereum.Contracts.Extensions;
-using Nethereum.Hex.HexConvertors.Extensions;
-using Nethereum.Hex.HexTypes;
-using Nethereum.JsonRpc.UnityClient;
-using Nethereum.RPC.Eth.DTOs;
-using Nethereum.RPC.TransactionManagers;
-using Nethereum.Signer;
-using Nethereum.Util;
-using Nethereum.Web3.Accounts;
-using UnityEngine;
-using UnityEngine.UI;
-
-public class EtherTransferCoroutinesUnityWebRequest : MonoBehaviour {
-
-    public string Url = "http://localhost:8545";
-    public string PrivateKey = "0xb5b1870957d373ef0eeffecc6e4812c0fd08f554b37b233526acc331bf1544f7";
-    public string AddressTo = "0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe";
-    public decimal Amount = 1.1m;
-    public decimal GasPriceGwei = 2;
-    public string TransactionHash = "";
-    public decimal BalanceAddressTo = 0m;
-
-    public InputField InputUrl;
-    public InputField InputPrivateKey;
-    public InputField InputAddressTo;
-    public InputField InputAmount;
-
-    public InputField ResultBalanceAddressTo;
-    public InputField ResultTxnHash;
-
-    // Use this for initialization
-    void Start () {
-
-        InputUrl.text = Url;
-        InputPrivateKey.text = PrivateKey;
-        InputAddressTo.text = AddressTo;
-        InputAmount.text = Amount.ToString();
-
-    }
-
-    public void TransferRequest()
-    {
-        StartCoroutine(TransferEther());
-    }
-
-    public enum FeeStrategy
-    {
-        Legacy,
-        TimePreference,
-        MedianFeeHistory
-    }
-
-    //Sample of new features / requests
-    public IEnumerator TransferEther()
-    {
-        Url = InputUrl.text;
-        PrivateKey = InputPrivateKey.text;
-        AddressTo = InputAddressTo.text;
-        Amount = System.Decimal.Parse(InputAmount.text);
-
-        //initialising the transaction request sender
-        var ethTransfer = new EthTransferUnityRequest(Url, PrivateKey, 444444444500);
-
-        var receivingAddress = AddressTo;
-
-        var feeStrategy = FeeStrategy.Legacy;
-
-        if (feeStrategy == FeeStrategy.TimePreference)
-        {
-            Debug.Log("Time Preference");
-            var timePreferenceFeeSuggestion = new TimePreferenceFeeSuggestionUnityRequestStrategy(Url);
-
-            yield return timePreferenceFeeSuggestion.SuggestFees();
-
-            if (timePreferenceFeeSuggestion.Exception != null)
-            {
-                Debug.Log(timePreferenceFeeSuggestion.Exception.Message);
-                yield break;
-            }
-
-            //lets get the first one so it is higher priority
-            Debug.Log(timePreferenceFeeSuggestion.Result.Length);
-            if (timePreferenceFeeSuggestion.Result.Length > 0)
-            {
-                Debug.Log(timePreferenceFeeSuggestion.Result[0].MaxFeePerGas);
-                Debug.Log(timePreferenceFeeSuggestion.Result[0].MaxPriorityFeePerGas);
-            }
-            var fee = timePreferenceFeeSuggestion.Result[0];
-
-            yield return ethTransfer.TransferEther(receivingAddress, Amount, fee.MaxPriorityFeePerGas.Value, fee.MaxFeePerGas.Value);
-            if (ethTransfer.Exception != null)
-            {
-                Debug.Log(ethTransfer.Exception.Message);
-                yield break;
-            }
-        }
-
-
-        if(feeStrategy == FeeStrategy.MedianFeeHistory)
-        {
-            Debug.Log("MedianFeeHistory mode");
-            var medianPriorityFeeStrategy = new MedianPriorityFeeHistorySuggestionUnityRequestStrategy(Url);
-
-            yield return medianPriorityFeeStrategy.SuggestFee();
-
-            if (medianPriorityFeeStrategy.Exception != null)
-            {
-                Debug.Log(medianPriorityFeeStrategy.Exception.Message);
-                yield break;
-            }
-            
-            Debug.Log(medianPriorityFeeStrategy.Result.MaxFeePerGas);
-            Debug.Log(medianPriorityFeeStrategy.Result.MaxPriorityFeePerGas);
-            
-            var fee = medianPriorityFeeStrategy.Result;
-
-            yield return ethTransfer.TransferEther(receivingAddress, Amount, fee.MaxPriorityFeePerGas.Value, fee.MaxFeePerGas.Value);
-            if (ethTransfer.Exception != null)
-            {
-                Debug.Log(ethTransfer.Exception.Message);
-                yield break;
-            }
-        }
-
-        if (feeStrategy == FeeStrategy.Legacy)
-        {
-            Debug.Log("Legacy mode");
-            //I am forcing the legacy mode but also I am including the gas price
-            ethTransfer.UseLegacyAsDefault = true;
-
-            yield return ethTransfer.TransferEther(receivingAddress, Amount, GasPriceGwei);
-
-            if (ethTransfer.Exception != null)
-            {
-                Debug.Log(ethTransfer.Exception.Message);
-                yield break;
-            }
-
-        }
-
-        TransactionHash = ethTransfer.Result;
-        ResultTxnHash.text = TransactionHash;
-        Debug.Log("Transfer transaction hash:" + TransactionHash);
-
-        //create a poll to get the receipt when mined
-        var transactionReceiptPolling = new TransactionReceiptPollingRequest(Url);
-        //checking every 2 seconds for the receipt
-        yield return transactionReceiptPolling.PollForReceipt(TransactionHash, 2);
-        
-        Debug.Log("Transaction mined");
-
-        var balanceRequest = new EthGetBalanceUnityRequest(Url);
-        yield return balanceRequest.SendRequest(receivingAddress, BlockParameter.CreateLatest());
-
-        BalanceAddressTo = UnitConversion.Convert.FromWei(balanceRequest.Result.Value);
-        ResultBalanceAddressTo.text = BalanceAddressTo.ToString();
-
-        Debug.Log("Balance of account:" + BalanceAddressTo);
-    }
-
-
-
-    // Update is called once per frame
-    void Update () {
-		
-	}
-
-}
-```
+This will be the same as the example of the Nethereum playground http://playground.nethereum.com/csharp/id/1076
 
 # Smart contract Integration
 
 This sample covers all the steps of smart contract integration using the ERC20 standard token.
 
 ## Declare our smart contract definition
+
 First step is to include our smart contract definition, this can be code generated using the vscode solidity extension or the console code generation tool.
+This will be reused for both Web3 / Tasks and Coroutines
 
 ```csharp
-//Deployment contract object definition
-    public partial class EIP20Deployment : EIP20DeploymentBase
-    {
-        public EIP20Deployment() : base(BYTECODE) { }
-        public EIP20Deployment(string byteCode) : base(byteCode) { }
-    }
-
-
-
-    public class EIP20DeploymentBase : ContractDeploymentMessage
-    {
-        public static string BYTECODE = "608060405234801561001057600080fd5b506040516107843803806107848339810160409081528151602080840151838501516060860151336000908152808552959095208490556002849055908501805193959094919391019161006991600391860190610096565b506004805460ff191660ff8416179055805161008c906005906020840190610096565b5050505050610131565b828054600181600116156101000203166002900490600052602060002090601f016020900481019282601f106100d757805160ff1916838001178555610104565b82800160010185558215610104579182015b828111156101045782518255916020019190600101906100e9565b50610110929150610114565b5090565b61012e91905b80821115610110576000815560010161011a565b90565b610644806101406000396000f3006080604052600436106100ae5763ffffffff7c010000000000000000000000000000000000000000000000000000000060003504166306fdde0381146100b3578063095ea7b31461013d57806318160ddd1461017557806323b872dd1461019c57806327e235e3146101c6578063313ce567146101e75780635c6581651461021257806370a082311461023957806395d89b411461025a578063a9059cbb1461026f578063dd62ed3e14610293575b600080fd5b3480156100bf57600080fd5b506100c86102ba565b6040805160208082528351818301528351919283929083019185019080838360005b838110156101025781810151838201526020016100ea565b50505050905090810190601f16801561012f5780820380516001836020036101000a031916815260200191505b509250505060405180910390f35b34801561014957600080fd5b50610161600160a060020a0360043516602435610348565b604080519115158252519081900360200190f35b34801561018157600080fd5b5061018a6103ae565b60408051918252519081900360200190f35b3480156101a857600080fd5b50610161600160a060020a03600435811690602435166044356103b4565b3480156101d257600080fd5b5061018a600160a060020a03600435166104b7565b3480156101f357600080fd5b506101fc6104c9565b6040805160ff9092168252519081900360200190f35b34801561021e57600080fd5b5061018a600160a060020a03600435811690602435166104d2565b34801561024557600080fd5b5061018a600160a060020a03600435166104ef565b34801561026657600080fd5b506100c861050a565b34801561027b57600080fd5b50610161600160a060020a0360043516602435610565565b34801561029f57600080fd5b5061018a600160a060020a03600435811690602435166105ed565b6003805460408051602060026001851615610100026000190190941693909304601f810184900484028201840190925281815292918301828280156103405780601f1061031557610100808354040283529160200191610340565b820191906000526020600020905b81548152906001019060200180831161032357829003601f168201915b505050505081565b336000818152600160209081526040808320600160a060020a038716808552908352818420869055815186815291519394909390927f8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925928290030190a350600192915050565b60025481565b600160a060020a03831660008181526001602090815260408083203384528252808320549383529082905281205490919083118015906103f45750828110155b15156103ff57600080fd5b600160a060020a038085166000908152602081905260408082208054870190559187168152208054849003905560001981101561046157600160a060020a03851660009081526001602090815260408083203384529091529020805484900390555b83600160a060020a031685600160a060020a03167fddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef856040518082815260200191505060405180910390a3506001949350505050565b60006020819052908152604090205481565b60045460ff1681565b600160209081526000928352604080842090915290825290205481565b600160a060020a031660009081526020819052604090205490565b6005805460408051602060026001851615610100026000190190941693909304601f810184900484028201840190925281815292918301828280156103405780601f1061031557610100808354040283529160200191610340565b3360009081526020819052604081205482111561058157600080fd5b3360008181526020818152604080832080548790039055600160a060020a03871680845292819020805487019055805186815290519293927fddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef929181900390910190a350600192915050565b600160a060020a039182166000908152600160209081526040808320939094168252919091522054905600a165627a7a7230582084c618322109054a21a57e27075384a6172ab854e4b2c2d35062a964a6bf593f0029";
-
-        public EIP20DeploymentBase() : base(BYTECODE) { }
-
-        public EIP20DeploymentBase(string byteCode) : base(byteCode) { }
-
-        [Parameter("uint256", "_initialAmount", 1)]
-
-        public BigInteger InitialAmount { get; set; }
-
-        [Parameter("string", "_tokenName", 2)]
-
-        public string TokenName { get; set; }
-
-        [Parameter("uint8", "_decimalUnits", 3)]
-
-        public byte DecimalUnits { get; set; }
-
-        [Parameter("string", "_tokenSymbol", 4)]
-
-        public string TokenSymbol { get; set; }
-
-    }
-
-
-
-    [Function("transfer", "bool")]
-    public class TransferFunctionBase : FunctionMessage
-    {
-        [Parameter("address", "_to", 1)]
-        public string To { get; set; }
-        [Parameter("uint256", "_value", 2)]
-        public BigInteger Value { get; set; }
-    }
-
-
-
-    public partial class TransferFunction : TransferFunctionBase
-    {
-    }
-
-    [Function("balanceOf", "uint256")]
-    public class BalanceOfFunction : FunctionMessage
-    {
-        [Parameter("address", "_owner", 1)]
-        public string Owner { get; set; }
-    }
-
-    [FunctionOutput]
-    public class BalanceOfFunctionOutput : IFunctionOutputDTO
-    {
-        [Parameter("uint256", 1)]
-        public int Balance { get; set; }
-    }
-    
-    [Event("Transfer")]
-    public class TransferEventDTOBase : IEventDTO
-    {
-        [Parameter("address", "_from", 1, true)]
-        public virtual string From { get; set; }
-
-        [Parameter("address", "_to", 2, true)]
-        public virtual string To { get; set; }
-
-        [Parameter("uint256", "_value", 3, false)]
-        public virtual BigInteger Value { get; set; }
-    }
-
-    public partial class TransferEventDTO : TransferEventDTOBase
-    {
-        public static EventABI GetEventABI()
-        {
-            return EventExtensions.GetEventABI<TransferEventDTO>();
-        }
-    }
-```
-
-## Contract deployment
-To deploy a smart contract we create a TransactionSignedUnityRequest with our url and signing information.
-Creating a new EIP20Deployment contract definition we set the constructor parameters and send the transaction.
-Finally we we create TransactionReceiptPollingRequest to poll for the transaction receipt and retrieve the newly deployed contract address from the transaction receipt.
-
-```csharp
-        var url = "http://localhost:8545";
-        var privateKey = "0xb5b1870957d373ef0eeffecc6e4812c0fd08f554b37b233526acc331bf1544f7";
-        var account = "0x12890d2cce102216644c59daE5baed380d84830c";
-        //initialising the transaction request sender
-        
-        var transactionRequest = new TransactionSignedUnityRequest(url, privateKey, "YOURCHAINID");
-
-        var deployContract = new EIP20Deployment()
-        {
-            InitialAmount = 10000,
-            FromAddress = account,
-            TokenName = "TST",
-            TokenSymbol = "TST"
-        };
-
-        //deploy the contract
-        yield return transactionRequest.SignAndSendDeploymentContractTransaction<EIP20DeploymentBase>(deployContract);
-
-        if (transactionRequest.Exception != null)
-        {
-            Debug.Log(transactionRequest.Exception.Message);
-            yield break;
-        }
-
-        var transactionHash = transactionRequest.Result;
-        Debug.Log("Deployment transaction hash:" + transactionHash);
-
-        //create a poll to get the receipt when mined
-        var transactionReceiptPolling = new TransactionReceiptPollingRequest(url);
-
-        //checking every 2 seconds for the receipt
-        yield return transactionReceiptPolling.PollForReceipt(transactionHash, 2);
-
-        var deploymentReceipt = transactionReceiptPolling.Result;
-
-        Debug.Log("Deployment contract address:" + deploymentReceipt.ContractAddress);
-```
-
-## Query smart contract
-To Query a smart contract we need to create a new QueryUnityRequest providing the FunctionType and ReturnType.
-We then will yield the Query and the query result Result object will provide us the Ouput of the contract already decoded.
-
-```csharp
- //Query request using our acccount and the contracts address (no parameters needed and default values)
-        var queryRequest = new QueryUnityRequest<BalanceOfFunction, BalanceOfFunctionOutput>(url, account);
-        yield return queryRequest.Query(new BalanceOfFunction(){Owner = account}, deploymentReceipt.ContractAddress);
-
-        //Getting the dto response already decoded
-        var dtoResult = queryRequest.Result;
-        Debug.Log(dtoResult.Balance);
-```
-
-## Transfer transaction
-To send a transaction to interact with a smart contract has similar steps to the deployment.
-We first create a TransactionSignedUnityRequest and our Function including any parameters, once the transaction is send we poll for the transaction receipt which will confirm the success of the transaction.
-
-Using the transaction receipt we can decoded any logs / events for that transaction.
-
-```csharp
- var transactionTransferRequest = new TransactionSignedUnityRequest(url, privateKey, "YOURCHAINID");
-        var newAddress = "0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe";
-
-
-        var transactionMessage = new TransferFunction
-        {
-            FromAddress = account,
-            To = newAddress,
-            Value = 1000,
-        };
-
-        yield return transactionTransferRequest.SignAndSendTransaction(transactionMessage, deploymentReceipt.ContractAddress);
-        var transactionTransferHash = transactionTransferRequest.Result;
-
-        Debug.Log("Transfer txn hash:" + transactionHash);
-
-        transactionReceiptPolling = new TransactionReceiptPollingRequest(url);
-        yield return transactionReceiptPolling.PollForReceipt(transactionTransferHash, 2);
-        var transferReceipt = transactionReceiptPolling.Result;
-
-        var transferEvent = transferReceipt.DecodeAllEvents<TransferEventDTO>();
-        Debug.Log("Transferd amount from event: " + transferEvent[0].Event.Value);
-```
-
-## Logs and Events
-To retrived the logs / events of a smart contract we use the EthGetLogsUnityRequest combined with a FilterInput specific to our Event.
-FilterInputs can be created using the EventDTO extension GetEventABI().
-Once we have yield the request, we can decode all matching events using the Result.DecodeAllEvents<TransferEventDTO>, extension method.
-
-```csharp
-        var getLogsRequest = new EthGetLogsUnityRequest(url);
-        var eventTransfer = TransferEventDTO.GetEventABI();
-        yield return getLogsRequest.SendRequest(eventTransfer.CreateFilterInput(deploymentReceipt.ContractAddress, account));
-        var eventDecoded = getLogsRequest.Result.DecodeAllEvents<TransferEventDTO>();
-        Debug.Log("Transferd amount from get logs event: " + eventDecoded[0].Event.Value);
-```
-
-## Full sample
-```csharp
-using System.Collections;
-using System.Collections.Generic;
-using System.Numerics;
 using Nethereum.ABI.FunctionEncoding.Attributes;
 using Nethereum.ABI.Model;
 using Nethereum.Contracts;
-using Nethereum.Contracts.CQS;
-using Nethereum.Contracts.Extensions;
-using Nethereum.JsonRpc.UnityClient;
-using UnityEngine;
+using System.Numerics;
 
-public class TokenDeployAndSendCoroutinesUnityWebRequest : MonoBehaviour {
 
-    //Deployment contract object definition
+//NOTE: All Contract definitions can be code generated using the vscode solidity extension, using the .net libraries or directly in the playground using the abi produced by the solidity compiler
 
-    public partial class EIP20Deployment : EIP20DeploymentBase
+//
+/// //********* CONTRACT DEFINITION  *******
+
+//*** Deployment message**** //
+// To deploy a contract we will create a class inheriting from the ContractDeploymentMessage, 
+// here we can include our compiled byte code and other constructor parameters.
+// As we can see below the StandardToken deployment message includes the compiled bytecode 
+// of the ERC20 smart contract and the constructor parameter with the “totalSupply” of tokens.
+// Each parameter is described with an attribute Parameter, including its name "totalSupply", type "uint256" and order.
+
+
+public class StandardTokenDeployment : ContractDeploymentMessage
+{
+    public static string BYTECODE =
+        "0x60606040526040516020806106f5833981016040528080519060200190919050505b80600160005060003373ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002060005081905550806000600050819055505b506106868061006f6000396000f360606040523615610074576000357c010000000000000000000000000000000000000000000000000000000090048063095ea7b31461008157806318160ddd146100b657806323b872dd146100d957806370a0823114610117578063a9059cbb14610143578063dd62ed3e1461017857610074565b61007f5b610002565b565b005b6100a060048080359060200190919080359060200190919050506101ad565b6040518082815260200191505060405180910390f35b6100c36004805050610674565b6040518082815260200191505060405180910390f35b6101016004808035906020019091908035906020019091908035906020019091905050610281565b6040518082815260200191505060405180910390f35b61012d600480803590602001909190505061048d565b6040518082815260200191505060405180910390f35b61016260048080359060200190919080359060200190919050506104cb565b6040518082815260200191505060405180910390f35b610197600480803590602001909190803590602001909190505061060b565b6040518082815260200191505060405180910390f35b600081600260005060003373ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002060005060008573ffffffffffffffffffffffffffffffffffffffff168152602001908152602001600020600050819055508273ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff167f8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925846040518082815260200191505060405180910390a36001905061027b565b92915050565b600081600160005060008673ffffffffffffffffffffffffffffffffffffffff168152602001908152602001600020600050541015801561031b575081600260005060008673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002060005060003373ffffffffffffffffffffffffffffffffffffffff1681526020019081526020016000206000505410155b80156103275750600082115b1561047c5781600160005060008573ffffffffffffffffffffffffffffffffffffffff1681526020019081526020016000206000828282505401925050819055508273ffffffffffffffffffffffffffffffffffffffff168473ffffffffffffffffffffffffffffffffffffffff167fddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef846040518082815260200191505060405180910390a381600160005060008673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002060008282825054039250508190555081600260005060008673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002060005060003373ffffffffffffffffffffffffffffffffffffffff1681526020019081526020016000206000828282505403925050819055506001905061048656610485565b60009050610486565b5b9392505050565b6000600160005060008373ffffffffffffffffffffffffffffffffffffffff1681526020019081526020016000206000505490506104c6565b919050565b600081600160005060003373ffffffffffffffffffffffffffffffffffffffff168152602001908152602001600020600050541015801561050c5750600082115b156105fb5781600160005060003373ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002060008282825054039250508190555081600160005060008573ffffffffffffffffffffffffffffffffffffffff1681526020019081526020016000206000828282505401925050819055508273ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff167fddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef846040518082815260200191505060405180910390a36001905061060556610604565b60009050610605565b5b92915050565b6000600260005060008473ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002060005060008373ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002060005054905061066e565b92915050565b60006000600050549050610683565b9056";
+
+    public StandardTokenDeployment() : base(BYTECODE)
     {
-        public EIP20Deployment() : base(BYTECODE) { }
-
-        public EIP20Deployment(string byteCode) : base(byteCode) { }
     }
 
-    public class EIP20DeploymentBase : ContractDeploymentMessage
+    [Parameter("uint256", "totalSupply")]
+    public BigInteger TotalSupply { get; set; }
+}
+
+//*** FUNCTION MESSAGES **** ///
+
+// We can call the functions of smart contract to query the state of a smart contract or do any computation, 
+// which will not affect the state of the blockchain.
+
+// To do so,  we will need to create a class which inherits from "FunctionMessage". 
+// First we will decorate the class with a "Function" attribute, including the name and return type.
+// Each parameter of the function will be a property of the class, each of them decorated with the "Parameter" attribute, 
+// including the smart contract’s parameter name, type and parameter order.
+// For the ERC20 smart contract, the "balanceOf" function definition, 
+// provides the query interface to get the token balance of a given address. 
+// As we can see this function includes only one parameter "\_owner", of the type "address".
+
+
+[Function("balanceOf", "uint256")]
+public class BalanceOfFunction : FunctionMessage
+{
+    [Parameter("address", "_owner", 1)]
+    public string Owner { get; set; }
+}
+
+
+// Another type of smart contract function will be a transaction 
+// that will change the state of the smart contract (or smart contracts).
+// For example The "transfer" function definition for the ERC20 smart contract, 
+// includes the parameters “\_to”, which is an address parameter as a string, and the “\_value” 
+// or TokenAmount we want to transfer.
+
+
+// In a similar way to the "balanceOf" function, all the parameters include the solidity type, 
+// the contract’s parameter name and parameter order.
+
+
+// Note: When working with functions, it is very important to have the parameters types and function name correct 
+//as all of these make the signature of the function.
+
+[Function("transfer", "bool")]
+public class TransferFunction : FunctionMessage
+{
+    [Parameter("address", "_to", 1)]
+    public string To { get; set; }
+
+    [Parameter("uint256", "_value", 2)]
+    public BigInteger TokenAmount { get; set; }
+}
+
+// Finally, smart contracts also have events. Events defined in smart contracts write in the blockchain log, 
+// providing a way to retrieve further information when a smart contract interaction occurs.
+// To create an Event definition, we need to create a class that inherits from IEventDTO, decorated with the Event attribute.
+// The Transfer Event is similar to a Function: it  also includes parameters with name, order and type. 
+// But also a boolean value indicating if the parameter is indexed or not.
+// Indexed parameters will allow us later on to query the blockchain for those values.
+
+
+[Event("Transfer")]
+public class TransferEventDTO : IEventDTO
+{
+    [Parameter("address", "_from", 1, true)]
+    public string From { get; set; }
+
+    [Parameter("address", "_to", 2, true)]
+    public string To { get; set; }
+
+    [Parameter("uint256", "_value", 3, false)]
+    public BigInteger Value { get; set; }
+
+    public static EventABI GetEventABI()
     {
-
-        public static string BYTECODE = "608060405234801561001057600080fd5b506040516107843803806107848339810160409081528151602080840151838501516060860151336000908152808552959095208490556002849055908501805193959094919391019161006991600391860190610096565b506004805460ff191660ff8416179055805161008c906005906020840190610096565b5050505050610131565b828054600181600116156101000203166002900490600052602060002090601f016020900481019282601f106100d757805160ff1916838001178555610104565b82800160010185558215610104579182015b828111156101045782518255916020019190600101906100e9565b50610110929150610114565b5090565b61012e91905b80821115610110576000815560010161011a565b90565b610644806101406000396000f3006080604052600436106100ae5763ffffffff7c010000000000000000000000000000000000000000000000000000000060003504166306fdde0381146100b3578063095ea7b31461013d57806318160ddd1461017557806323b872dd1461019c57806327e235e3146101c6578063313ce567146101e75780635c6581651461021257806370a082311461023957806395d89b411461025a578063a9059cbb1461026f578063dd62ed3e14610293575b600080fd5b3480156100bf57600080fd5b506100c86102ba565b6040805160208082528351818301528351919283929083019185019080838360005b838110156101025781810151838201526020016100ea565b50505050905090810190601f16801561012f5780820380516001836020036101000a031916815260200191505b509250505060405180910390f35b34801561014957600080fd5b50610161600160a060020a0360043516602435610348565b604080519115158252519081900360200190f35b34801561018157600080fd5b5061018a6103ae565b60408051918252519081900360200190f35b3480156101a857600080fd5b50610161600160a060020a03600435811690602435166044356103b4565b3480156101d257600080fd5b5061018a600160a060020a03600435166104b7565b3480156101f357600080fd5b506101fc6104c9565b6040805160ff9092168252519081900360200190f35b34801561021e57600080fd5b5061018a600160a060020a03600435811690602435166104d2565b34801561024557600080fd5b5061018a600160a060020a03600435166104ef565b34801561026657600080fd5b506100c861050a565b34801561027b57600080fd5b50610161600160a060020a0360043516602435610565565b34801561029f57600080fd5b5061018a600160a060020a03600435811690602435166105ed565b6003805460408051602060026001851615610100026000190190941693909304601f810184900484028201840190925281815292918301828280156103405780601f1061031557610100808354040283529160200191610340565b820191906000526020600020905b81548152906001019060200180831161032357829003601f168201915b505050505081565b336000818152600160209081526040808320600160a060020a038716808552908352818420869055815186815291519394909390927f8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925928290030190a350600192915050565b60025481565b600160a060020a03831660008181526001602090815260408083203384528252808320549383529082905281205490919083118015906103f45750828110155b15156103ff57600080fd5b600160a060020a038085166000908152602081905260408082208054870190559187168152208054849003905560001981101561046157600160a060020a03851660009081526001602090815260408083203384529091529020805484900390555b83600160a060020a031685600160a060020a03167fddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef856040518082815260200191505060405180910390a3506001949350505050565b60006020819052908152604090205481565b60045460ff1681565b600160209081526000928352604080842090915290825290205481565b600160a060020a031660009081526020819052604090205490565b6005805460408051602060026001851615610100026000190190941693909304601f810184900484028201840190925281815292918301828280156103405780601f1061031557610100808354040283529160200191610340565b3360009081526020819052604081205482111561058157600080fd5b3360008181526020818152604080832080548790039055600160a060020a03871680845292819020805487019055805186815290519293927fddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef929181900390910190a350600192915050565b600160a060020a039182166000908152600160209081526040808320939094168252919091522054905600a165627a7a7230582084c618322109054a21a57e27075384a6172ab854e4b2c2d35062a964a6bf593f0029";
-
-        public EIP20DeploymentBase() : base(BYTECODE) { }
-
-        public EIP20DeploymentBase(string byteCode) : base(byteCode) { }
-
-        [Parameter("uint256", "_initialAmount", 1)]
-        public BigInteger InitialAmount { get; set; }
-        [Parameter("string", "_tokenName", 2)]
-        public string TokenName { get; set; }
-        [Parameter("uint8", "_decimalUnits", 3)]
-        public byte DecimalUnits { get; set; }
-        [Parameter("string", "_tokenSymbol", 4)]
-        public string TokenSymbol { get; set; }
-
+        return EventExtensions.GetEventABI<TransferEventDTO>();
     }
+}
 
-    [Function("transfer", "bool")]
-    public class TransferFunctionBase : FunctionMessage
-    {
-        [Parameter("address", "_to", 1)]
-        public string To { get; set; }
-        [Parameter("uint256", "_value", 2)]
-        public BigInteger Value { get; set; }
-    }
+// ### Multiple return types or complex objects
+// Functions of smart contracts can return one or multiple values in a single call. To decode the returned values, we use a FunctionOutputDTO.
+// Function outputs are classes which are decorated with a FunctionOutput attribute and implement the interface IFunctionOutputDTO.
+// An example of this is the following implementation that can be used to return the single value of the Balance on the ERC20 smart contract.
 
-    public partial class TransferFunction : TransferFunctionBase
-    {
-
-    }
-
-    [Function("balanceOf", "uint256")]
-    public class BalanceOfFunction : FunctionMessage
-    {
-        [Parameter("address", "_owner", 1)]
-        public string Owner { get; set; }
-    }
-
-    [FunctionOutput]
-    public class BalanceOfFunctionOutput : IFunctionOutputDTO
-    {
-        [Parameter("uint256", 1)]
-        public int Balance { get; set; }
-    }
-
-    [Event("Transfer")]
-    public class TransferEventDTOBase : IEventDTO
-    {
-
-        [Parameter("address", "_from", 1, true)]
-        public virtual string From { get; set; }
-        [Parameter("address", "_to", 2, true)]
-        public virtual string To { get; set; }
-        [Parameter("uint256", "_value", 3, false)]
-        public virtual BigInteger Value { get; set; }
-    }
-
-    public partial class TransferEventDTO : TransferEventDTOBase
-    {
-        public static EventABI GetEventABI()
-        {
-            return EventExtensions.GetEventABI<TransferEventDTO>();
-        }
-    }
-
-    // Use this for initialization
-    void Start () {
-
-       StartCoroutine(DeployAndTransferToken());
-    }
-
-
-    //Sample of new features / requests
-    public IEnumerator DeployAndTransferToken()
-    {
-        var url = "http://localhost:8545";
-        var privateKey = "0xb5b1870957d373ef0eeffecc6e4812c0fd08f554b37b233526acc331bf1544f7";
-        var account = "0x12890d2cce102216644c59daE5baed380d84830c";
-        //initialising the transaction request sender
-        var transactionRequest = new TransactionSignedUnityRequest(url, privateKey);
-
-
-        var deployContract = new EIP20Deployment()
-        {
-            InitialAmount = 10000,
-            FromAddress = account,
-            TokenName = "TST",
-            TokenSymbol = "TST"
-        };
-
-        //deploy the contract and True indicates we want to estimate the gas
-        yield return transactionRequest.SignAndSendDeploymentContractTransaction<EIP20DeploymentBase>(deployContract);
-
-        if (transactionRequest.Exception != null)
-        {
-            Debug.Log(transactionRequest.Exception.Message);
-            yield break;
-        }
-
-        var transactionHash = transactionRequest.Result;
-
-        Debug.Log("Deployment transaction hash:" + transactionHash);
-
-        //create a poll to get the receipt when mined
-        var transactionReceiptPolling = new TransactionReceiptPollingRequest(url);
-        //checking every 2 seconds for the receipt
-        yield return transactionReceiptPolling.PollForReceipt(transactionHash, 2);
-        var deploymentReceipt = transactionReceiptPolling.Result;
-
-        Debug.Log("Deployment contract address:" + deploymentReceipt.ContractAddress);
-
-        //Query request using our acccount and the contracts address (no parameters needed and default values)
-        var queryRequest = new QueryUnityRequest<BalanceOfFunction, BalanceOfFunctionOutput>(url, account);
-        yield return queryRequest.Query(new BalanceOfFunction(){Owner = account}, deploymentReceipt.ContractAddress);
-
-        //Getting the dto response already decoded
-        var dtoResult = queryRequest.Result;
-        Debug.Log(dtoResult.Balance);
-
-
-        var transactionTransferRequest = new TransactionSignedUnityRequest(url, privateKey);
-
-        var newAddress = "0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe";
-
-        var transactionMessage = new TransferFunction
-        {
-            FromAddress = account,
-            To = newAddress,
-            Value = 1000,
-
-        };
-
-        yield return transactionTransferRequest.SignAndSendTransaction(transactionMessage, deploymentReceipt.ContractAddress);
-
-        var transactionTransferHash = transactionTransferRequest.Result;
-
-        Debug.Log("Transfer txn hash:" + transactionHash);
-
-        transactionReceiptPolling = new TransactionReceiptPollingRequest(url);
-        yield return transactionReceiptPolling.PollForReceipt(transactionTransferHash, 2);
-        var transferReceipt = transactionReceiptPolling.Result;
-
-        var transferEvent = transferReceipt.DecodeAllEvents<TransferEventDTO>();
-        Debug.Log("Transferd amount from event: " + transferEvent[0].Event.Value);
-
-        var getLogsRequest = new EthGetLogsUnityRequest(url);
-
-        var eventTransfer = TransferEventDTO.GetEventABI();
-        yield return getLogsRequest.SendRequest(eventTransfer.CreateFilterInput(deploymentReceipt.ContractAddress, account));
-
-        var eventDecoded = getLogsRequest.Result.DecodeAllEvents<TransferEventDTO>();
-
-        Debug.Log("Transferd amount from get logs event: " + eventDecoded[0].Event.Value);
-    }
-  
+[FunctionOutput]
+public class BalanceOfOutputDTO : IFunctionOutputDTO
+{
+    [Parameter("uint256", "balance", 1)]
+    public BigInteger Balance { get; set; }
 }
 ```
-## Targetting multiple platforms Desktop / Native / Browser
-	
+## Erc20 Coroutines
+
+### Targetting multiple platforms Desktop / Native / Browser using Coroutines
+
+Before we start interacting with the smart contract is best to describe how we are going to create our connection to interact with the client and signed transactions.
+
 Using the ```IUnityRpcRequestClientFactory``` and the ```IContractTransactionUnityRequest``` you can change the way your transactions are signed reusing all your code.
 	
 In this example we are either signing or querying the chain using our provided url / private key / chainId when we are in a desktop / mobile / console environment or if we are in a browser we use Metamask to sign our transactions.
 	
 ```csharp
 
-    public IUnityRpcRequestClientFactory GetUnityRpcRequestClientFactory()
+ public IUnityRpcRequestClientFactory GetUnityRpcRequestClientFactory()
     {
+#if UNITY_WEBGL
         if (IsWebGL())
         {
-            if (MetamaskInterop.IsMetamaskAvailable())
+            if (MetamaskWebglInterop.IsMetamaskAvailable())
             {
-                return new MetamaskRequestRpcClientFactory(_selectedAccountAddress, null, 1000);
+                return new MetamaskWebglCoroutineRequestRpcClientFactory(_selectedAccountAddress, null, 60000);
             }
             else
             {
@@ -839,19 +448,23 @@ In this example we are either signing or querying the chain using our provided u
         }
         else
         {
+#endif
             Url = InputUrl.text;
-            
             return new UnityWebRequestRpcClientFactory(Url);
+#if UNITY_WEBGL
         }
+#endif
     }
 
     public IContractTransactionUnityRequest GetTransactionUnityRequest()
     {
+#if UNITY_WEBGL
+
         if (IsWebGL())
         {
-            if (MetamaskInterop.IsMetamaskAvailable())
+            if (MetamaskWebglInterop.IsMetamaskAvailable())
             {
-                return new MetamaskTransactionUnityRequest(_selectedAccountAddress, GetUnityRpcRequestClientFactory());
+                return new MetamaskTransactionCoroutineUnityRequest(_selectedAccountAddress, GetUnityRpcRequestClientFactory());
             }
             else
             {
@@ -861,14 +474,417 @@ In this example we are either signing or querying the chain using our provided u
         }
         else
         {
+#endif
             Url = InputUrl.text;
             PrivateKey = InputPrivateKey.text;
             ChainId = BigInteger.Parse(InputChainId.text);
+            var account = new Nethereum.Web3.Accounts.Account(InputPrivateKey.text);
+            NewAccountSelected(account.Address);
             return new TransactionSignedUnityRequest(Url, PrivateKey, ChainId);
+#if UNITY_WEBGL
         }
+#endif
     }	
 ```
-### Full Sample
+
+
+### Contract deployment using Coroutines
+To deploy a smart contract we create a IContractTransactionUnityRequest using the way highlighted in "Targetting multiple platforms Desktop / Native / Browser using Coroutines"
+Creating a new StandardTokenDeployment contract definition we set the constructor parameters and send the transaction.
+Finally we we create TransactionReceiptPollingRequest to poll for the transaction receipt and retrieve the newly deployed contract address from the transaction receipt.
+
+```csharp
+        var transactionRequest = GetTransactionUnityRequest();
+        transactionRequest.UseLegacyAsDefault = true;
+
+
+        var deployContract = new StandardTokenDeployment()
+        {
+            TotalSupply = Nethereum.Web3.Web3.Convert.ToWei(10000000),
+            FromAddress = _selectedAccountAddress
+        };
+
+        //deploy the contract and True indicates we want to estimate the gas
+        yield return transactionRequest.SignAndSendDeploymentContractTransaction(deployContract);
+
+        if (transactionRequest.Exception != null)
+        {
+            Debug.Log(transactionRequest.Exception.Message);
+            DisplayError(transactionRequest.Exception.Message);
+            yield break;
+        }
+
+        var transactionHash = transactionRequest.Result;
+
+        Debug.Log("Deployment transaction hash:" + transactionHash);
+
+        //create a poll to get the receipt when mined
+        var transactionReceiptPolling = new TransactionReceiptPollingRequest(GetUnityRpcRequestClientFactory());
+        //checking every 2 seconds for the receipt
+        yield return transactionReceiptPolling.PollForReceipt(transactionHash, 2);
+        var deploymentReceipt = transactionReceiptPolling.Result;
+        ResultContractAddress.text = deploymentReceipt.ContractAddress;
+```
+
+### Query smart contract Coroutines
+To Query a smart contract we need to create a new QueryUnityRequest providing the FunctionType and ReturnType.
+We then will yield the Query and the query result Result object will provide us the Ouput of the contract already decoded.
+
+```csharp
+ //Query request using our acccount and the contracts address (no parameters needed and default values)
+       var queryRequest = new QueryUnityRequest<BalanceOfFunction, BalanceOfOutputDTO>(GetUnityRpcRequestClientFactory(), _selectedAccountAddress);
+        yield return queryRequest.Query(new BalanceOfFunction() { Owner = AddressTo }, contractAddress);
+
+        //Getting the dto response already decoded
+        var dtoResult = queryRequest.Result;
+        Debug.Log(dtoResult.Balance);
+```
+
+### Transfer transaction Coroutines
+To send a transaction to interact with a smart contract has similar steps to the deployment.
+We first create a TransactionSignedUnityRequest and our Function including any parameters, once the transaction is send we poll for the transaction receipt which will confirm the success of the transaction.
+
+Using the transaction receipt we can decoded any logs / events for that transaction.
+
+```csharp
+        var transactionRequest = GetTransactionUnityRequest();
+        transactionRequest.UseLegacyAsDefault = true; // use legacy here
+
+        var transferFunction = new TransferFunction
+        {
+            To = AddressTo,
+            TokenAmount = Nethereum.Web3.Web3.Convert.ToWei(Amount),
+            FromAddress = _selectedAccountAddress
+        };
+
+        yield return transactionRequest.SignAndSendTransaction(transferFunction, contractAddress);
+
+        if (transactionRequest.Exception != null)
+        {
+            Debug.Log(transactionRequest.Exception.Message);
+            DisplayError(transactionRequest.Exception.Message);
+            yield break;
+        }
+
+        var transactionTransferHash = transactionRequest.Result;
+
+        ResultTxnHash.text = transactionTransferHash;
+        Debug.Log("Transfer transaction hash:" + transactionTransferHash);
+
+        var transactionReceiptPolling = new TransactionReceiptPollingRequest(GetUnityRpcRequestClientFactory());
+        yield return transactionReceiptPolling.PollForReceipt(transactionTransferHash, 2);
+        var transferReceipt = transactionReceiptPolling.Result;
+
+        var transferEvent = transferReceipt.DecodeAllEvents<TransferEventDTO>();
+        Debug.Log("Transferred amount from event: " + transferEvent[0].Event.Value);
+
+```
+
+### Logs and Events Coroutines
+To retrived the logs / events of a smart contract we use the EthGetLogsUnityRequest combined with a FilterInput specific to our Event.
+FilterInputs can be created using the EventDTO extension GetEventABI().
+Once we have yield the request, we can decode all matching events using the Result.DecodeAllEvents<TransferEventDTO>, extension method.
+
+```csharp
+         var getLogsRequest = new EthGetLogsUnityRequest(GetUnityRpcRequestClientFactory());
+
+        var eventTransfer = TransferEventDTO.GetEventABI();
+        yield return getLogsRequest.SendRequest(eventTransfer.CreateFilterInput(contractAddress, _selectedAccountAddress));
+
+        var eventDecoded = getLogsRequest.Result.DecodeAllEvents<TransferEventDTO>();
+
+        Debug.Log("Transferred amount from get logs event: " + eventDecoded[0].Event.Value);
+```
+
+### Full sample ERC20 Corutines
+```csharp
+using Nethereum.Contracts;
+using Nethereum.Hex.HexTypes;
+using Nethereum.Unity.Contracts;
+#if UNITY_WEBGL
+  using Nethereum.Unity.Metamask;
+#endif
+using Nethereum.Unity.Rpc;
+using Nethereum.Util;
+using System.Collections;
+using System.Numerics;
+using UnityEngine;
+using UnityEngine.UI;
+using Debug = UnityEngine.Debug;
+
+public class MultiplatformErc20Coroutine : MonoBehaviour
+{
+    public string Url = "http://localhost:8545";
+    public BigInteger ChainId = 444444444500;
+    public string PrivateKey = "0xb5b1870957d373ef0eeffecc6e4812c0fd08f554b37b233526acc331bf1544f7";
+    public string AddressTo = "0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe";
+    private string _selectedAccountAddress; 
+    private bool _isMetamaskInitialised = false;
+    public decimal Amount = 1.1m;
+
+    public InputField InputUrl;
+    public InputField InputChainId;
+    public InputField InputPrivateKey;
+    public InputField InputAddressTo;
+    public InputField InputAmount;
+
+    public InputField ResultBalanceAddressTo;
+    public InputField ResultTxnHash;
+    public InputField ResultContractAddress;
+    public Button BtnMetamaskConnect;
+    public Text  LblError;
+
+    void Start()
+    {
+
+        if (IsWebGL()) // using pk etc only on desktop as an example
+        {
+            InputUrl.enabled = false;
+            InputPrivateKey.enabled = false;
+            InputChainId.enabled = false;
+
+        }
+        else
+        {
+         
+            InputUrl.text = Url;
+            InputPrivateKey.text = PrivateKey;
+            InputChainId.text = ChainId.ToString();
+            BtnMetamaskConnect.enabled = false;
+        }
+
+        InputAddressTo.text = AddressTo;
+        InputAmount.text = Amount.ToString();
+
+    }
+
+    public bool IsWebGL()
+    {
+#if UNITY_WEBGL
+      return true;
+#else
+      return false;
+#endif
+    }
+
+    public async void DeployRequest()
+    {
+        StartCoroutine(DeployERC20UsingCoroutines());
+    }
+
+    public IEnumerator DeployERC20UsingCoroutines()
+    {
+        var transactionRequest = GetTransactionUnityRequest();
+        transactionRequest.UseLegacyAsDefault = true;
+
+
+        var deployContract = new StandardTokenDeployment()
+        {
+            TotalSupply = Nethereum.Web3.Web3.Convert.ToWei(10000000),
+            FromAddress = _selectedAccountAddress
+        };
+
+        //deploy the contract and True indicates we want to estimate the gas
+        yield return transactionRequest.SignAndSendDeploymentContractTransaction(deployContract);
+
+        if (transactionRequest.Exception != null)
+        {
+            Debug.Log(transactionRequest.Exception.Message);
+            DisplayError(transactionRequest.Exception.Message);
+            yield break;
+        }
+
+        var transactionHash = transactionRequest.Result;
+
+        Debug.Log("Deployment transaction hash:" + transactionHash);
+
+        //create a poll to get the receipt when mined
+        var transactionReceiptPolling = new TransactionReceiptPollingRequest(GetUnityRpcRequestClientFactory());
+        //checking every 2 seconds for the receipt
+        yield return transactionReceiptPolling.PollForReceipt(transactionHash, 2);
+        var deploymentReceipt = transactionReceiptPolling.Result;
+        ResultContractAddress.text = deploymentReceipt.ContractAddress;
+    }
+
+    public async void TransferRequest()
+    {
+        StartCoroutine(TransferErc20AndGetBalance());
+        
+    }
+
+    public IEnumerator TransferErc20AndGetBalance()
+    {
+      
+        AddressTo = InputAddressTo.text;
+        Amount = System.Decimal.Parse(InputAmount.text);
+        var contractAddress = ResultContractAddress.text;
+
+        //initialising the transaction request sender
+        var transactionRequest = GetTransactionUnityRequest();
+        transactionRequest.UseLegacyAsDefault = true;
+
+        var transferFunction = new TransferFunction
+        {
+            To = AddressTo,
+            TokenAmount = Nethereum.Web3.Web3.Convert.ToWei(Amount),
+            FromAddress = _selectedAccountAddress
+        };
+
+        yield return transactionRequest.SignAndSendTransaction(transferFunction, contractAddress);
+
+        if (transactionRequest.Exception != null)
+        {
+            Debug.Log(transactionRequest.Exception.Message);
+            DisplayError(transactionRequest.Exception.Message);
+            yield break;
+        }
+
+        var transactionTransferHash = transactionRequest.Result;
+
+        ResultTxnHash.text = transactionTransferHash;
+        Debug.Log("Transfer transaction hash:" + transactionTransferHash);
+
+        var transactionReceiptPolling = new TransactionReceiptPollingRequest(GetUnityRpcRequestClientFactory());
+        yield return transactionReceiptPolling.PollForReceipt(transactionTransferHash, 2);
+        var transferReceipt = transactionReceiptPolling.Result;
+
+        var transferEvent = transferReceipt.DecodeAllEvents<TransferEventDTO>();
+        Debug.Log("Transferred amount from event: " + transferEvent[0].Event.Value);
+
+        var getLogsRequest = new EthGetLogsUnityRequest(GetUnityRpcRequestClientFactory());
+
+        var eventTransfer = TransferEventDTO.GetEventABI();
+        yield return getLogsRequest.SendRequest(eventTransfer.CreateFilterInput(contractAddress, _selectedAccountAddress));
+
+        var eventDecoded = getLogsRequest.Result.DecodeAllEvents<TransferEventDTO>();
+
+        Debug.Log("Transferred amount from get logs event: " + eventDecoded[0].Event.Value);
+
+        var queryRequest = new QueryUnityRequest<BalanceOfFunction, BalanceOfOutputDTO>(GetUnityRpcRequestClientFactory(), _selectedAccountAddress);
+        yield return queryRequest.Query(new BalanceOfFunction() { Owner = AddressTo }, contractAddress);
+
+        //Getting the dto response already decoded
+        var dtoResult = queryRequest.Result;
+        Debug.Log(dtoResult.Balance);
+
+        var balanceReceiver = UnitConversion.Convert.FromWei(dtoResult.Balance);
+        ResultBalanceAddressTo.text = balanceReceiver.ToString();
+
+        Debug.Log("Balance of account:" + balanceReceiver);
+    }
+
+    public void DisplayError(string errorMessage)
+    {
+        LblError.text = errorMessage;
+    }
+
+    public void MetamaskConnect()
+    {
+#if UNITY_WEBGL
+        if (IsWebGL())
+        {
+            if (MetamaskWebglInterop.IsMetamaskAvailable())
+            {
+                MetamaskWebglInterop.EnableEthereum(gameObject.name, nameof(EthereumEnabled), nameof(DisplayError));
+            }
+            else
+            {
+                DisplayError("Metamask is not available, please install it");
+            }
+        }
+#endif
+
+    }
+
+    public void EthereumEnabled(string addressSelected)
+    {
+#if UNITY_WEBGL
+        if (IsWebGL())
+        {
+            if (!_isMetamaskInitialised)
+            {
+                MetamaskWebglInterop.EthereumInit(gameObject.name, nameof(NewAccountSelected), nameof(ChainChanged));
+                MetamaskWebglInterop.GetChainId(gameObject.name, nameof(ChainChanged), nameof(DisplayError));
+                _isMetamaskInitialised = true;
+            }
+            NewAccountSelected(addressSelected);
+        }
+#endif
+    }
+
+    public void ChainChanged(string chainId)
+    {
+        print(chainId);
+        ChainId = new HexBigInteger(chainId).Value;
+        InputChainId.text = ChainId.ToString();
+    }
+
+    public void NewAccountSelected(string accountAddress)
+    {
+        _selectedAccountAddress = accountAddress;
+    }
+
+
+
+
+    public IUnityRpcRequestClientFactory GetUnityRpcRequestClientFactory()
+    {
+#if UNITY_WEBGL
+        if (IsWebGL())
+        {
+            if (MetamaskWebglInterop.IsMetamaskAvailable())
+            {
+                return new MetamaskWebglCoroutineRequestRpcClientFactory(_selectedAccountAddress, null, 60000);
+            }
+            else
+            {
+                // DisplayError("Metamask is not available, please install it");
+                return null;
+            }
+        }
+        else
+        {
+#endif
+            Url = InputUrl.text;
+            return new UnityWebRequestRpcClientFactory(Url);
+#if UNITY_WEBGL
+        }
+#endif
+    }
+
+    public IContractTransactionUnityRequest GetTransactionUnityRequest()
+    {
+#if UNITY_WEBGL
+
+        if (IsWebGL())
+        {
+            if (MetamaskWebglInterop.IsMetamaskAvailable())
+            {
+                return new MetamaskTransactionCoroutineUnityRequest(_selectedAccountAddress, GetUnityRpcRequestClientFactory());
+            }
+            else
+            {
+                DisplayError("Metamask is not available, please install it");
+                return null;
+            }
+        }
+        else
+        {
+#endif
+            Url = InputUrl.text;
+            PrivateKey = InputPrivateKey.text;
+            ChainId = BigInteger.Parse(InputChainId.text);
+            var account = new Nethereum.Web3.Accounts.Account(InputPrivateKey.text);
+            NewAccountSelected(account.Address);
+            return new TransactionSignedUnityRequest(Url, PrivateKey, ChainId);
+#if UNITY_WEBGL
+        }
+#endif
+    }
+```
+
+	
+### Full Sample ERC20
 
 ```csharp
 using System.Collections;
@@ -1112,6 +1128,12 @@ public class MultiplatformTransfer : MonoBehaviour
 }
 	
 ```
+
+## Erc20 Web3 / Tasks
+	
+### Targetting multiple platforms Desktop / Native / Browser using Web3 / Tasks
+
+	
 
 ## Credits
 
