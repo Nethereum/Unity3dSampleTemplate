@@ -1,6 +1,6 @@
 # Unity3d Sample Template Net472 / Netstandard
 
-Sample template to get started Unity3d development using Nethereum. 
+Sample template to get started working with Unity3d development using Nethereum, from smart contracts, code generation to Unity integration. 
 Unity Version used is 2022.3.21 
 
 ## Template structure and projects
