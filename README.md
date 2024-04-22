@@ -17,22 +17,29 @@ The main unity example project including the following code examples:
 * Using a Nethereum contract integration project (Sample.DotNet) 
 * Metamask connectivity in browser
 
-The example references the openupm com.nethereum.unity package which includes the Nethereum main dlls for .net472 and netstandard  https://github.com/Nethereum/Nethereum.Unity.
-See below for specific code examples.
+The example includes the reference to the openupm com.nethereum.unity package which includes the Nethereum main dlls for .net472 and netstandard  https://github.com/Nethereum/Nethereum.Unity. 
+Check the package for installation information, or the Package configuration (Manifest.json) section in this document.
 
 **Sample.DotNet**
 This folder is the "generic" standalone .net integration project and tests. 
+
 ***Sample.DotNet.Contracts***
+
 This is the standard Nethereum integration project, but adapted to work with Unity, including both an .asmdef and package.json files.
+
 The csproj has been modified to output the bin and obj files to a build folder so it can be referenced by the Sample.Unity project.
+
 ```xml
  	<BaseOutputPath>..\Build\$(MSBuildProjectName)\bin</BaseOutputPath>
         <BaseIntermediateOutputPath>..\Build\$(MSBuildProjectName)\obj</BaseIntermediateOutputPath>
 ```
+
 ***Sample.DotNet.Tests***
+
 This the standard test project supported by ***Nethereum.XUnitEthereumClients*** and a testchain included in the testchain folder (using geth by default and included)
 
 **Sample.Solidity.Contracts**
+
 This includes the ERC2O smart contract that is used in the examples.
 
 
