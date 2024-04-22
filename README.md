@@ -1,28 +1,49 @@
 # Unity3d Sample Template Net472 / Netstandard
 
-Sample template to get started Unity3d development using Nethereum. It includes the necessary dlls from the Net472AOT Common release in the asset folder (other none specialised ones like geth, reactive, etc are not included but can be downloaded from Nethereum releases if needed). Netstandard libraries work the same. Some libraries you might not need, like Nethereum.HD and NBitcoin to support Hierarchical Deterministic Wallets so you can remove them.
+Sample template to get started Unity3d development using Nethereum. 
+Unity Version used is 2022.3.21 
 
-Unity Version used is 2022.1.23 
+##Template structure and projects
 
-Dlls included: Nethereum, dependencies (BouncyCastle, Microsoft.Extensions.Logging.Abstractions, NBitcoin.dll for HD Wallet)
+**Sample.Unity**
+The main unity example project, it includes an example to the openupm com.nethereum.unity package including all the Nethereum main dlls for .net472 and netstandard  https://github.com/Nethereum/Nethereum.Unity.
 
-The code demonstrates:
+Code examples:
 
 * Output to the log the current BlockNumber using Unity.UI both in Async and coroutines
 * Ether transfer using Unity.UI and coroutines
 * Using 1559 Suggestion strategies or Legacy mode when tranfering Ether
 * Smart contract deployment (ERC20), Transactions (Transfer) and Querying (Balance)
 * Cross Platform architecture for both Coroutines and Task to enable the reuse of your code using different deployments Native /Desktop or Browser using Metamask)
+* Using a Nethereum contract integration project (Sample.DotNet) 
 * Metamask connectivity in browser
+
+See below for more information on the code examples.
+
+**Sample.DotNet**
+This folder is the "generic" standalone .net integration project and tests. 
+***Sample.DotNet.Contracts***
+This is the standard Nethereum integration project, but adapted to work with Unity, including both an .asmdef and package.json files.
+The csproj has been modified to output the bin and obj files to a build folder so it can be referenced by the Sample.Unity project.
+```xml
+ 	<BaseOutputPath>..\Build\$(MSBuildProjectName)\bin</BaseOutputPath>
+        <BaseIntermediateOutputPath>..\Build\$(MSBuildProjectName)\obj</BaseIntermediateOutputPath>
+```
+***Sample.DotNet.Tests***
+This the standard test project supported by ***Nethereum.XUnitEthereumClients*** and a testchain included in the testchain folder (using geth by default and included)
+
+**Sample.Solidity.Contracts**
+This includes the ERC2O smart contract that is used in the examples.
+
 
 ## Important Notes:
 * All the examples are self contained, to simplify them, so when working with the browser you will need "Connect" per example.
 * WebGL: When using Web3 with Tasks this requires something like the WebGLThreadingPatcher https://github.com/VolodymyrBS/WebGLThreadingPatcher, or any other way to enable wasm with Task threading support.
-* To support AOT and WebGL this sample uses the Nethereum dlls packaged for Net472AOT or NetstandardAOT with the custom Newtonsoft Json.Net by Unity
-* Please remember to remove System.HttpClient and UnityEngine of the Nethereum release package if included
+* To support AOT and WebGL this sample uses the Nethereum dlls packaged for Net472AOT or NetstandardAOT with the custom Newtonsoft Json.Net by Unity (already added as a package reference)
+* Please remember to remove System.HttpClient and UnityEngine of the Nethereum release package if using the nethereum dlls directly
 * Nethereum.Unity.Metamask is only supported in WebGL at the moment, the Metamask SDK will be supported shortly, currently work in progresss (if you require access to small PoC let me know)
 ![image](https://user-images.githubusercontent.com/562371/194084421-2c3dff68-f61b-479e-b877-2d62ccb42859.png)
-* If creating a custom index.html file, or rebuilding webgl in a new folder, the script needs to instantiate ```nethereumUnityInstance``` as per the example here: https://github.com/Nethereum/Unity3dSampleTemplate/blob/master/webgl/index.html#L107
+* If creating a custom index.html file, or rebuilding webgl in a new folder, the script needs to instantiate ```nethereumUnityInstance``` as per the example here: https://github.com/Nethereum/Unity3dSampleTemplate/Sample.Unity/blob/master/webgl/index.html#L107
 * When building to Desktop and other platforms (not web), you will requited to use "https" instead of "http" as the newer versions of Unity validate this.
 
 ### Desktop demo
@@ -33,8 +54,37 @@ The code demonstrates:
 ![Webgl](screenshots/BrowserWebglDemo.gif "Webgl")
 
 ### Test Chain
-To run a local blockchain you can just use the preconfigured [testchains](https://github.com/Nethereum/Nethereum.Workbooks/tree/master/testchain/)
-All the examples use the chainId "444444444500" as default, needless to say you can change it to your own.
+To run a local blockchain you can just use the preconfigured chain includes in Sample.DotNet/testchain.
+All the examples use the chainId "31337" as default.
+
+## Package configuration (Manifest.json)
+Here is the example of the packages in manifest.json included in the Sample.Unity/packages folder
+
+```json
+{
+  "scopedRegistries": [
+        {
+            "name": "package.openupm.com",
+            "url": "https://package.openupm.com",
+            "scopes": [
+                "com.nethereum.unity"
+            ]
+        }
+  ],
+  "dependencies": {
+	"com.nethereum.unity": "4.19.2",
+    	"com.tools.webglthreadingpatcher": "file:../../WebGLThreadingPatcher",
+	"com.contracts.dotnet.sample": "file:../../Sample.DotNet/Sample.DotNet.Contracts",
+	"com.unity.nuget.newtonsoft-json": "3.2.1",
+      ...
+
+```
+First we have the scoped registries that uses openupm to include "com.nethereum.unity",
+The webglthreadingpatcher has been downloaded from its github repository and added as folder dependency.
+The sample dotnent integration project:  "com.contracts.dotnet.sample": "file:../../Sample.DotNet/Sample.DotNet.Contracts"
+and finally newtonsoft json: "com.unity.nuget.newtonsoft-json": "3.2.1"
+
+## Code examples
 
 ### BlockNumber query Async (vanilla Nethereum)
 ```csharp
