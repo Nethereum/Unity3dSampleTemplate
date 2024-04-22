@@ -1,0 +1,12 @@
+{
+  "name": "com.contracts.dotnet.sample",
+  "displayName": "contracts dotnet sample",
+  "version": "0.0.1",
+  "unity": "2018.1",
+  "description": "dotnet sample contracts api",
+  "keywords": [
+    "unity"
+  ],
+  "category": "Unity",
+  "type": "library"
+}
