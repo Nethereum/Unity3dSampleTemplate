@@ -3,12 +3,11 @@
 Sample template to get started Unity3d development using Nethereum. 
 Unity Version used is 2022.3.21 
 
-##Template structure and projects
+## Template structure and projects
 
 **Sample.Unity**
-The main unity example project, it includes an example to the openupm com.nethereum.unity package including all the Nethereum main dlls for .net472 and netstandard  https://github.com/Nethereum/Nethereum.Unity.
 
-Code examples:
+The main unity example project including the following code examples:
 
 * Output to the log the current BlockNumber using Unity.UI both in Async and coroutines
 * Ether transfer using Unity.UI and coroutines
@@ -18,7 +17,8 @@ Code examples:
 * Using a Nethereum contract integration project (Sample.DotNet) 
 * Metamask connectivity in browser
 
-See below for more information on the code examples.
+The example references the openupm com.nethereum.unity package which includes the Nethereum main dlls for .net472 and netstandard  https://github.com/Nethereum/Nethereum.Unity.
+See below for specific code examples.
 
 **Sample.DotNet**
 This folder is the "generic" standalone .net integration project and tests. 
@@ -79,10 +79,10 @@ Here is the example of the packages in manifest.json included in the Sample.Unit
       ...
 
 ```
-First we have the scoped registries that uses openupm to include "com.nethereum.unity",
-The webglthreadingpatcher has been downloaded from its github repository and added as folder dependency.
-The sample dotnent integration project:  "com.contracts.dotnet.sample": "file:../../Sample.DotNet/Sample.DotNet.Contracts"
-and finally newtonsoft json: "com.unity.nuget.newtonsoft-json": "3.2.1"
+* Scoped registries that uses openupm to include "com.nethereum.unity".
+* Webglthreadingpatcher has been downloaded from its github repository and added as folder dependency.
+* Sample dotnet integration project:  "com.contracts.dotnet.sample": "file:../../Sample.DotNet/Sample.DotNet.Contracts"
+* Newtonsoft json: "com.unity.nuget.newtonsoft-json": "3.2.1"
 
 ## Code examples
 
