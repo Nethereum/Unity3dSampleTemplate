@@ -59,6 +59,7 @@ This includes the ERC2O smart contract that is used in the examples.
 
 ### Browser demo
 ![Webgl](screenshots/BrowserWebglDemo.gif "Webgl")
+![WebglEIP](https://github.com/user-attachments/assets/cee5391b-0ca9-4a41-a0e1-f21c2f707129)
 
 ### Test Chain
 To run a local blockchain you can just use the preconfigured chain includes in Sample.DotNet/testchain.
