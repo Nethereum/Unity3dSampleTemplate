@@ -406,7 +406,7 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="Nethereum.RPC">
-      <HintPath>Library\PackageCache\com.nethereum.unity@4.19.2\Runtime\Nethereum.RPC.dll</HintPath>
+      <HintPath>C:\Users\SuperDev\Documents\Repos\Unity3dSampleTemplate\Nethereum\Runtime\Nethereum.RPC.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.VisualScripting.YamlDotNet">
@@ -414,31 +414,35 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="Microsoft.Extensions.Logging.Abstractions">
-      <HintPath>Library\PackageCache\com.nethereum.unity@4.19.2\Runtime\Microsoft.Extensions.Logging.Abstractions.dll</HintPath>
+      <HintPath>C:\Users\SuperDev\Documents\Repos\Unity3dSampleTemplate\Nethereum\Runtime\Microsoft.Extensions.Logging.Abstractions.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Nethereum.Mud.Contracts">
+      <HintPath>C:\Users\SuperDev\Documents\Repos\Unity3dSampleTemplate\Nethereum\Runtime\Nethereum.Mud.Contracts.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Nethereum.Geth">
-      <HintPath>Library\PackageCache\com.nethereum.unity@4.19.2\Runtime\Nethereum.Geth.dll</HintPath>
+      <HintPath>C:\Users\SuperDev\Documents\Repos\Unity3dSampleTemplate\Nethereum\Runtime\Nethereum.Geth.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Nethereum.Optimism">
-      <HintPath>Library\PackageCache\com.nethereum.unity@4.19.2\Runtime\Nethereum.Optimism.dll</HintPath>
+      <HintPath>C:\Users\SuperDev\Documents\Repos\Unity3dSampleTemplate\Nethereum\Runtime\Nethereum.Optimism.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Nethereum.BlockchainProcessing">
-      <HintPath>Library\PackageCache\com.nethereum.unity@4.19.2\Runtime\Nethereum.BlockchainProcessing.dll</HintPath>
+      <HintPath>C:\Users\SuperDev\Documents\Repos\Unity3dSampleTemplate\Nethereum\Runtime\Nethereum.BlockchainProcessing.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Nethereum.Model">
-      <HintPath>Library\PackageCache\com.nethereum.unity@4.19.2\Runtime\Nethereum.Model.dll</HintPath>
+      <HintPath>C:\Users\SuperDev\Documents\Repos\Unity3dSampleTemplate\Nethereum\Runtime\Nethereum.Model.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Nethereum.Signer">
-      <HintPath>Library\PackageCache\com.nethereum.unity@4.19.2\Runtime\Nethereum.Signer.dll</HintPath>
+      <HintPath>C:\Users\SuperDev\Documents\Repos\Unity3dSampleTemplate\Nethereum\Runtime\Nethereum.Signer.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Nethereum.Siwe.Core">
-      <HintPath>Library\PackageCache\com.nethereum.unity@4.19.2\Runtime\Nethereum.Siwe.Core.dll</HintPath>
+      <HintPath>C:\Users\SuperDev\Documents\Repos\Unity3dSampleTemplate\Nethereum\Runtime\Nethereum.Siwe.Core.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.Plastic.Antlr3.Runtime">
@@ -450,27 +454,31 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="ADRaffy.ENSNormalize">
-      <HintPath>Library\PackageCache\com.nethereum.unity@4.19.2\Runtime\ADRaffy.ENSNormalize.dll</HintPath>
+      <HintPath>C:\Users\SuperDev\Documents\Repos\Unity3dSampleTemplate\Nethereum\Runtime\ADRaffy.ENSNormalize.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Nethereum.Merkle.Patricia">
-      <HintPath>Library\PackageCache\com.nethereum.unity@4.19.2\Runtime\Nethereum.Merkle.Patricia.dll</HintPath>
+      <HintPath>C:\Users\SuperDev\Documents\Repos\Unity3dSampleTemplate\Nethereum\Runtime\Nethereum.Merkle.Patricia.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Nethereum.EIP6963WalletInterop">
+      <HintPath>C:\Users\SuperDev\Documents\Repos\Unity3dSampleTemplate\Nethereum\Runtime\Nethereum.EIP6963WalletInterop.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Nethereum.JsonRpc.RpcClient">
-      <HintPath>Library\PackageCache\com.nethereum.unity@4.19.2\Runtime\Nethereum.JsonRpc.RpcClient.dll</HintPath>
+      <HintPath>C:\Users\SuperDev\Documents\Repos\Unity3dSampleTemplate\Nethereum\Runtime\Nethereum.JsonRpc.RpcClient.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Nethereum.RLP">
-      <HintPath>Library\PackageCache\com.nethereum.unity@4.19.2\Runtime\Nethereum.RLP.dll</HintPath>
+      <HintPath>C:\Users\SuperDev\Documents\Repos\Unity3dSampleTemplate\Nethereum\Runtime\Nethereum.RLP.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="BouncyCastle.Crypto">
-      <HintPath>Library\PackageCache\com.nethereum.unity@4.19.2\Runtime\BouncyCastle.Crypto.dll</HintPath>
+      <HintPath>C:\Users\SuperDev\Documents\Repos\Unity3dSampleTemplate\Nethereum\Runtime\BouncyCastle.Crypto.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Nethereum.HdWallet">
-      <HintPath>Library\PackageCache\com.nethereum.unity@4.19.2\Runtime\Nethereum.HdWallet.dll</HintPath>
+      <HintPath>C:\Users\SuperDev\Documents\Repos\Unity3dSampleTemplate\Nethereum\Runtime\Nethereum.HdWallet.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.Plastic.Newtonsoft.Json">
@@ -478,19 +486,19 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="Nethereum.EVM">
-      <HintPath>Library\PackageCache\com.nethereum.unity@4.19.2\Runtime\Nethereum.EVM.dll</HintPath>
+      <HintPath>C:\Users\SuperDev\Documents\Repos\Unity3dSampleTemplate\Nethereum\Runtime\Nethereum.EVM.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Nethereum.Web3">
-      <HintPath>Library\PackageCache\com.nethereum.unity@4.19.2\Runtime\Nethereum.Web3.dll</HintPath>
+      <HintPath>C:\Users\SuperDev\Documents\Repos\Unity3dSampleTemplate\Nethereum\Runtime\Nethereum.Web3.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Nethereum.UI">
-      <HintPath>Library\PackageCache\com.nethereum.unity@4.19.2\Runtime\Nethereum.UI.dll</HintPath>
+      <HintPath>C:\Users\SuperDev\Documents\Repos\Unity3dSampleTemplate\Nethereum\Runtime\Nethereum.UI.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Nethereum.Metamask">
-      <HintPath>Library\PackageCache\com.nethereum.unity@4.19.2\Runtime\Nethereum.Metamask.dll</HintPath>
+      <HintPath>C:\Users\SuperDev\Documents\Repos\Unity3dSampleTemplate\Nethereum\Runtime\Nethereum.Metamask.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="log4netPlastic">
@@ -498,7 +506,7 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="Nethereum.Unity">
-      <HintPath>Library\PackageCache\com.nethereum.unity@4.19.2\Runtime\Nethereum.Unity.dll</HintPath>
+      <HintPath>C:\Users\SuperDev\Documents\Repos\Unity3dSampleTemplate\Nethereum\Runtime\Nethereum.Unity.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.VisualScripting.IonicZip">
@@ -506,23 +514,23 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="Nethereum.Hex">
-      <HintPath>Library\PackageCache\com.nethereum.unity@4.19.2\Runtime\Nethereum.Hex.dll</HintPath>
+      <HintPath>C:\Users\SuperDev\Documents\Repos\Unity3dSampleTemplate\Nethereum\Runtime\Nethereum.Hex.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Nethereum.JsonRpc.Client">
-      <HintPath>Library\PackageCache\com.nethereum.unity@4.19.2\Runtime\Nethereum.JsonRpc.Client.dll</HintPath>
+      <HintPath>C:\Users\SuperDev\Documents\Repos\Unity3dSampleTemplate\Nethereum\Runtime\Nethereum.JsonRpc.Client.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Nethereum.Accounts">
-      <HintPath>Library\PackageCache\com.nethereum.unity@4.19.2\Runtime\Nethereum.Accounts.dll</HintPath>
+      <HintPath>C:\Users\SuperDev\Documents\Repos\Unity3dSampleTemplate\Nethereum\Runtime\Nethereum.Accounts.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Nethereum.Unity.Metamask">
-      <HintPath>Library\PackageCache\com.nethereum.unity@4.19.2\Runtime\Nethereum.Unity.Metamask.dll</HintPath>
+      <HintPath>C:\Users\SuperDev\Documents\Repos\Unity3dSampleTemplate\Nethereum\Runtime\Nethereum.Unity.Metamask.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Nethereum.Besu">
-      <HintPath>Library\PackageCache\com.nethereum.unity@4.19.2\Runtime\Nethereum.Besu.dll</HintPath>
+      <HintPath>C:\Users\SuperDev\Documents\Repos\Unity3dSampleTemplate\Nethereum\Runtime\Nethereum.Besu.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.VisualScripting.Antlr3.Runtime">
@@ -530,19 +538,19 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="Nethereum.Util">
-      <HintPath>Library\PackageCache\com.nethereum.unity@4.19.2\Runtime\Nethereum.Util.dll</HintPath>
+      <HintPath>C:\Users\SuperDev\Documents\Repos\Unity3dSampleTemplate\Nethereum\Runtime\Nethereum.Util.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Nethereum.Merkle">
-      <HintPath>Library\PackageCache\com.nethereum.unity@4.19.2\Runtime\Nethereum.Merkle.dll</HintPath>
+      <HintPath>C:\Users\SuperDev\Documents\Repos\Unity3dSampleTemplate\Nethereum\Runtime\Nethereum.Merkle.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Nethereum.Signer.EIP712">
-      <HintPath>Library\PackageCache\com.nethereum.unity@4.19.2\Runtime\Nethereum.Signer.EIP712.dll</HintPath>
+      <HintPath>C:\Users\SuperDev\Documents\Repos\Unity3dSampleTemplate\Nethereum\Runtime\Nethereum.Signer.EIP712.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Nethereum.GnosisSafe">
-      <HintPath>Library\PackageCache\com.nethereum.unity@4.19.2\Runtime\Nethereum.GnosisSafe.dll</HintPath>
+      <HintPath>C:\Users\SuperDev\Documents\Repos\Unity3dSampleTemplate\Nethereum\Runtime\Nethereum.GnosisSafe.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json">
@@ -557,24 +565,36 @@
       <HintPath>Library\PackageCache\com.unity.nuget.mono-cecil@1.11.4\Mono.Cecil.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Nethereum.Mud">
+      <HintPath>C:\Users\SuperDev\Documents\Repos\Unity3dSampleTemplate\Nethereum\Runtime\Nethereum.Mud.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Nethereum.Siwe">
-      <HintPath>Library\PackageCache\com.nethereum.unity@4.19.2\Runtime\Nethereum.Siwe.dll</HintPath>
+      <HintPath>C:\Users\SuperDev\Documents\Repos\Unity3dSampleTemplate\Nethereum\Runtime\Nethereum.Siwe.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Nethereum.Util.Rest">
+      <HintPath>C:\Users\SuperDev\Documents\Repos\Unity3dSampleTemplate\Nethereum\Runtime\Nethereum.Util.Rest.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="NBitcoin">
-      <HintPath>Library\PackageCache\com.nethereum.unity@4.19.2\Runtime\NBitcoin.dll</HintPath>
+      <HintPath>C:\Users\SuperDev\Documents\Repos\Unity3dSampleTemplate\Nethereum\Runtime\NBitcoin.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Nethereum.KeyStore">
-      <HintPath>Library\PackageCache\com.nethereum.unity@4.19.2\Runtime\Nethereum.KeyStore.dll</HintPath>
+      <HintPath>C:\Users\SuperDev\Documents\Repos\Unity3dSampleTemplate\Nethereum\Runtime\Nethereum.KeyStore.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Nethereum.Contracts">
-      <HintPath>Library\PackageCache\com.nethereum.unity@4.19.2\Runtime\Nethereum.Contracts.dll</HintPath>
+      <HintPath>C:\Users\SuperDev\Documents\Repos\Unity3dSampleTemplate\Nethereum\Runtime\Nethereum.Contracts.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Nethereum.ABI">
-      <HintPath>Library\PackageCache\com.nethereum.unity@4.19.2\Runtime\Nethereum.ABI.dll</HintPath>
+      <HintPath>C:\Users\SuperDev\Documents\Repos\Unity3dSampleTemplate\Nethereum\Runtime\Nethereum.ABI.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Nethereum.Unity.EIP6963">
+      <HintPath>C:\Users\SuperDev\Documents\Repos\Unity3dSampleTemplate\Nethereum\Runtime\Nethereum.Unity.EIP6963.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="mscorlib">

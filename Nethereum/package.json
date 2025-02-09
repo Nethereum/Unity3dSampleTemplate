@@ -1,0 +1,19 @@
+  {
+	  "name": "com.nethereum",
+	  "displayName": "Nethereum",
+	  "version": "4.16.0",
+	  "unity": "2018.1",
+	  "description": "Nethereum 472 AOT runtime dlls, please check Nethereum releases for more information, extra components, or other versions (net461, net35, netstandard)  https://github.com/Nethereum/Nethereum/releases, example can be found at https://github.com/Nethereum/Unity3dSampleTemplate",
+	  "changelogUrl": "https://github.com/Nethereum/Nethereum/releases",
+	  "author": {
+		  "name": "Juan Blanco",
+		  "url": "nethereum.com"
+	  },
+	  "license": "MIT",
+	  "licensesUrl": "https://github.com/Nethereum/Nethereum.Unity/blob/main/LICENSE.md",
+	  "keywords": [
+		  "unity", "nethereum", "ethereum", "rpc", "abi", "smart contracts", "evm"
+	  ],
+	  "category": "Unity",
+	  "type": "library"
+  }

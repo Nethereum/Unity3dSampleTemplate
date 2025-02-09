@@ -1,15 +1,6 @@
 {
-  "scopedRegistries": [
-        {
-            "name": "package.openupm.com",
-            "url": "https://package.openupm.com",
-            "scopes": [
-                "com.nethereum.unity"
-            ]
-        }
-  ],
   "dependencies": {
-	"com.nethereum.unity": "4.19.2",
+	"com.nethereum": "file:../../Nethereum",
     "com.tools.webglthreadingpatcher": "file:../../WebGLThreadingPatcher",
 	"com.contracts.dotnet.sample": "file:../../Sample.DotNet/Sample.DotNet.Contracts",
 	"com.unity.nuget.newtonsoft-json": "3.2.1",
