@@ -16,7 +16,7 @@ using System;
 public class MultiplatformTransferTaskWeb3 : MonoBehaviour
 {
     public string Url = "http://localhost:8545";
-    public BigInteger ChainId = 31337;
+    public BigInteger ChainId = 444444444500;
     public string PrivateKey = "0xb5b1870957d373ef0eeffecc6e4812c0fd08f554b37b233526acc331bf1544f7";
     public string AddressTo = "0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe";
     private string _selectedAccountAddress; 

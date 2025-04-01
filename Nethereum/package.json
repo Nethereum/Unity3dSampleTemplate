@@ -1,9 +1,9 @@
   {
-	  "name": "com.nethereum",
+	  "name": "com.nethereum.unity",
 	  "displayName": "Nethereum",
-	  "version": "4.16.0",
+	  "version": "4.29.0",
 	  "unity": "2018.1",
-	  "description": "Nethereum 472 AOT runtime dlls, please check Nethereum releases for more information, extra components, or other versions (net461, net35, netstandard)  https://github.com/Nethereum/Nethereum/releases, example can be found at https://github.com/Nethereum/Unity3dSampleTemplate",
+	  "description": "Nethereum 472 / netstandard AOT runtime dlls, please check Nethereum releases for more information, extra components, or other versions (net461, net35, netstandard)  https://github.com/Nethereum/Nethereum/releases, example can be found at https://github.com/Nethereum/Unity3dSampleTemplate",
 	  "changelogUrl": "https://github.com/Nethereum/Nethereum/releases",
 	  "author": {
 		  "name": "Juan Blanco",

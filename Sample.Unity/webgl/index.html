@@ -3,14 +3,12 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>Unity WebGL Player | UnityPlayground</title>
+    <title>Unity Web Player | UnityPlayground</title>
   </head>
   <body style="text-align: center; padding: 0; border: 0; margin: 0;">
     <canvas id="unity-canvas" width=1920 height=1080 tabindex="-1" style="width: 1920px; height: 1080px; background: #231F20"></canvas>
     <script src="Build/webgl.loader.js"></script>
     <script>
-	
-	  var nethereumUnityInstance = null;
       if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
         // Mobile device style: fill the whole browser client area with the game canvas:
         var meta = document.createElement('meta');
@@ -27,6 +25,7 @@
       }
 
       createUnityInstance(document.querySelector("#unity-canvas"), {
+        arguments: [],
         dataUrl: "Build/webgl.data.gz",
         frameworkUrl: "Build/webgl.framework.js.gz",
         codeUrl: "Build/webgl.wasm.gz",
@@ -36,9 +35,7 @@
         productVersion: "1.0",
         // matchWebGLToCanvasSize: false, // Uncomment this to separately control WebGL canvas render size and DOM element size.
         // devicePixelRatio: 1, // Uncomment this to override low DPI rendering on high DPI displays.
-      }).then((unityInstance) => {
-			    nethereumUnityInstance = unityInstance
-				});
+      });
     </script>
   </body>
 </html>

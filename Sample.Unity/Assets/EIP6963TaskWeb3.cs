@@ -226,6 +226,8 @@ public class EIP6963TaskWeb3 : MonoBehaviour
         InputSelectedAddress.text = _selectedAccountAddress;
         return await eip6963Host.GetWeb3Async();
 #endif
+
+        return null;
     }
 
 }
