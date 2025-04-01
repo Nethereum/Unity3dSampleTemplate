@@ -46,6 +46,7 @@ This includes the ERC2O smart contract that is used in the examples.
 ## Important Notes:
 * All the examples are self contained, to simplify them, so when working with the browser you will need "Connect" per example.
 * WebGL: When using Web3 with Tasks this requires something like the WebGLThreadingPatcher https://github.com/VolodymyrBS/WebGLThreadingPatcher, or any other way to enable wasm with Task threading support.
+  Note if you are using Unity V6 you will require to use https://github.com/Nethereum/WebGLThreadingPatcher that includes a fix, not yet available on the main repository.
 * To support AOT and WebGL this sample uses the Nethereum dlls packaged for Net472AOT or NetstandardAOT with the custom Newtonsoft Json.Net by Unity (already added as a package reference)
 * Please remember to remove System.HttpClient and UnityEngine of the Nethereum release package if using the nethereum dlls directly
 * Nethereum.Unity.Metamask is only supported in WebGL at the moment, the Metamask SDK will be supported shortly, currently work in progresss (if you require access to small PoC let me know)
